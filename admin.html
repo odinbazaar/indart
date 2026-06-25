@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>İNDART — Yönetim Paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="module" src="siteData.js"></script>
+
+<style>
+  :root {
+    --green-deep: #005a35;
+    --green: #007a45;
+    --green-dark: #002e1b;
+    --gold: #c9a86a;
+    --gold-soft: #d4b884;
+    --cream: #f5f1e8;
+    --paper: #fafaf7;
+    --ink: #0a0f0c;
+    --ink-soft: #2a2f2c;
+    --grey: #9a9c98;
+    --grey-line: #d8d6cf;
+    --body: 'Inter', sans-serif;
+    --display: 'Cormorant Garamond', serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--body);
+    background-color: var(--ink);
+    color: var(--paper);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+    mix-blend-mode: difference; display: none;
+  }
+  @media (min-width: 901px) {
+    body { cursor: default; }
+    .cursor { display: block; }
+  }
+
+  /* Login Card */
+  .login-container {
+    width: 100%; max-width: 440px; padding: 40px;
+    background: rgba(10, 15, 12, 0.7);
+    border: 1px solid rgba(201, 168, 106, 0.2);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    transition: all 0.5s ease;
+  }
+  .login-logo { margin-bottom: 30px; }
+  .login-logo img { height: 44px; width: auto; }
+  .login-title {
+    font-family: var(--display); font-size: 28px; font-weight: 300;
+    color: var(--gold); margin-bottom: 24px; letter-spacing: 0.05em;
+  }
+  .form-group { position: relative; margin-bottom: 24px; text-align: left; }
+  .form-group label {
+    display: block; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.15em; color: var(--gold-soft); margin-bottom: 8px;
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(245, 241, 232, 0.15);
+    color: var(--paper); font-family: var(--body); font-size: 14px;
+    border-radius: 6px; outline: none; transition: border-color 0.3s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: var(--gold);
+  }
+  .btn {
+    display: inline-block; width: 100%; padding: 14px 28px;
+    background: var(--gold); color: var(--ink); border: none;
+    font-family: var(--body); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; border-radius: 30px;
+    cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
+  }
+  .btn:hover {
+    background: var(--paper); transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(201, 168, 106, 0.25);
+  }
+  .error-msg {
+    color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none;
+  }
+
+  /* Admin Dashboard Layout */
+  .dashboard {
+    display: none; width: 100%; min-height: 100vh; flex-direction: column;
+    background-color: #0c120e;
+  }
+  .header {
+    padding: 20px 48px; border-bottom: 1px solid rgba(245, 241, 232, 0.1);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--ink); position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 20px; }
+  .header-left img { height: 32px; width: auto; }
+  .header-left h1 {
+    font-family: var(--display); font-size: 20px; font-weight: 300;
+    color: var(--gold); letter-spacing: 0.1em;
+  }
+  .header-actions { display: flex; gap: 12px; }
+  .btn-outline {
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    padding: 10px 20px; font-size: 11px; font-weight: 500;
+    border-radius: 20px; letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .btn-outline:hover { background: var(--gold); color: var(--ink); }
+  .btn-logout { border-color: #ff6b6b; color: #ff6b6b; }
+  .btn-logout:hover { background: #ff6b6b; color: var(--paper); }
+
+  .main-layout { display: flex; flex: 1; height: calc(100vh - 73px); }
+  
+  /* Sidebar Navigation */
+  .sidebar {
+    width: 280px; background: var(--ink); border-right: 1px solid rgba(245, 241, 232, 0.1);
+    padding: 30px 20px; display: flex; flex-direction: column; gap: 8px;
+    overflow-y: auto;
+  }
+  .tab-btn {
+    display: flex; align-items: center; padding: 14px 20px;
+    background: transparent; border: none; color: var(--grey);
+    font-family: var(--body); font-size: 13px; font-weight: 400;
+    letter-spacing: 0.05em; border-radius: 8px; text-align: left;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .tab-btn:hover { background: rgba(245, 241, 232, 0.04); color: var(--paper); }
+  .tab-btn.active { background: rgba(201, 168, 106, 0.1); color: var(--gold); font-weight: 500; }
+
+  /* Content Panel */
+  .content-panel {
+    flex: 1; padding: 40px 48px; overflow-y: auto; background: #070b08;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  
+  .section-title-panel {
+    font-family: var(--display); font-size: 32px; font-weight: 300;
+    color: var(--paper); margin-bottom: 30px; display: flex;
+    justify-content: space-between; align-items: center;
+  }
+  
+  .card {
+    background: rgba(10, 15, 12, 0.6);
+    border: 1px solid rgba(245, 241, 232, 0.08);
+    border-radius: 8px; padding: 30px; margin-bottom: 24px;
+  }
+  .card-title {
+    font-size: 16px; font-weight: 500; color: var(--gold);
+    margin-bottom: 20px; border-bottom: 1px solid rgba(245, 241, 232, 0.08);
+    padding-bottom: 10px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+  /* Project Manager styles */
+  .project-list-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(245, 241, 232, 0.08); border-radius: 6px;
+    margin-bottom: 12px; transition: all 0.3s;
+  }
+  .project-list-item:hover { background: rgba(245, 241, 232, 0.04); }
+  .proj-info { display: flex; align-items: center; gap: 16px; }
+  .proj-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; background: #000; }
+  .proj-details h4 { font-size: 14px; font-weight: 500; color: var(--paper); }
+  .proj-details p { font-size: 11px; color: var(--grey); margin-top: 2px; }
+  .proj-actions { display: flex; gap: 8px; }
+  
+  .btn-sm {
+    padding: 6px 12px; font-size: 10px; border-radius: 12px;
+  }
+  .btn-danger {
+    background: transparent; border: 1px solid #ff6b6b; color: #ff6b6b;
+  }
+  .btn-danger:hover { background: #ff6b6b; color: var(--paper); }
+
+  /* Notification Toast */
+  .toast {
+    position: fixed; bottom: 30px; right: 30px; padding: 16px 24px;
+    background: var(--green-deep); color: var(--paper); border: 1px solid var(--gold);
+    border-radius: 6px; font-size: 13px; font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); z-index: 1000;
+    transform: translateY(100px); opacity: 0; transition: all 0.4s ease;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* Media Preview styles */
+  .media-preview-container {
+    display: flex; gap: 15px; align-items: center; margin-top: 8px;
+  }
+  .media-preview {
+    width: 100px; height: 60px; object-fit: cover; border: 1px solid rgba(245, 241, 232, 0.1);
+    border-radius: 4px; background: #000;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor"></div>
+
+<!-- LOGIN SCREEN -->
+<div class="login-container" id="loginScreen">
+  <div class="login-logo">
+    <img src="logo-transparent.png" alt="INDART">
+  </div>
+  <h2 class="login-title">Yönetim Paneli Girişi</h2>
+  <div class="form-group">
+    <label for="password">Şifre</label>
+    <input type="password" id="password" placeholder="Şifrenizi girin">
+  </div>
+  <button class="btn" id="loginBtn">Giriş Yap</button>
+  <div class="error-msg" id="errorMsg">Hatalı şifre girdiniz. Lütfen tekrar deneyin.</div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="dashboard" id="adminDashboard">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <img src="logo-transparent.png" alt="INDART">
+      <h1>Yönetim Paneli</h1>
+    </div>
+    <div class="header-actions">
+      <a href="index.html" class="btn-outline" target="_blank">Siteyi Önizle</a>
+      <button class="btn-outline" id="importJsonBtn">JSON İçe Aktar</button>
+      <button class="btn-outline" id="exportJsonBtn">JSON Dışa Aktar</button>
+      <button class="btn btn-outline btn-logout" id="logoutBtn" style="margin-top:0; width:auto;">Çıkış</button>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+      <button class="tab-btn active" onclick="switchTab('heroTab', this)">Slayt & Kahraman Bölümü</button>
+      <button class="tab-btn" onclick="switchTab('aboutTab', this)">Hakkımızda Bölümü</button>
+      <button class="tab-btn" onclick="switchTab('servicesTab', this)">Hizmetlerimiz (3 Sütun)</button>
+      <button class="tab-btn" onclick="switchTab('projectsTab', this)">Projelerimiz (Portföy)</button>
+      <button class="tab-btn" onclick="switchTab('valuesTab', this)">Değerlerimiz (6 İlke)</button>
+      <button class="tab-btn" onclick="switchTab('processTab', this)">Sürecimiz</button>
+      <button class="tab-btn" onclick="switchTab('contactTab', this)">İletişim & Alt Bilgi</button>
+    </div>
+
+    <!-- Content Panel -->
+    <div class="content-panel">
+      <!-- 1. Hero Tab -->
+      <div id="heroTab" class="tab-content active">
+        <div class="section-title-panel">Kahraman & Slayt Bölümü <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button></div>
+        
+        <div class="card">
+          <div class="card-title">Metin Alanları</div>
+          <div class="form-group">
+            <label>Üst Başlık (Eyebrow)</label>
+            <input type="text" id="hero_eyebrow">
+          </div>
+          <div class="grid-3">
+            <div class="form-group">
+              <label>Başlık Satır 1</label>
+              <input type="text" id="hero_titleLine1">
+            </div>
+            <div class="form-group">
+              <label>Başlık Satır 2 (Eğik / İtalik Yazı)</label>
+              <input type="text" id="hero_titleLine2">
+            </div>
+            <div class="form-group">
+              <label>Başlık Satır 3</label>
+              <input type="text" id="hero_titleLine3">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Açıklama Yazısı</label>
+            <textarea id="hero_meta" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">İstatistikler (4 Adet)</div>
+          <div class="grid-4" id="hero_stats_container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Slayt Videoları (Maksimum 10 Adet)</div>
+          <div id="hero_videos_container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. About Tab -->
+      <div id="aboutTab" class="tab-content">
+        <div class="section-title-panel">Hakkımızda Bölümü <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button></div>
+        
+        <div class="card">
+          <div class="card-title">İçerik Düzenleme</div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Kategori Etiketi</label>
+              <input type="text" id="about_tag">
+            </div>
+            <div class="form-group">
+              <label>Başlık (Vurgulu kelimeler için &lt;em&gt; kelime &lt;/em&gt; kullanabilirsiniz)</label>
+              <input type="text" id="about_title">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Giriş Cümlesi (Lead)</label>
+            <input type="text" id="about_lead">
+          </div>
+          <div class="form-group">
+            <label>Paragraf 1</label>
+            <textarea id="about_paragraph1" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Paragraf 2</label>
+            <textarea id="about_paragraph2" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Bölüm Görseli</label>
+            <input type="text" id="about_image" placeholder="Görsel URL veya Dosya Yükle">
+            <div class="media-preview-container">
+              <input type="file" accept="image/*" onchange="uploadFile(this, 'about_image', 'about_img_preview')">
+              <img id="about_img_preview" class="media-preview" src="" alt="Önizleme">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Yönetici & Deneyim İmza Bilgileri</div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>İmza İsim</label>
+              <input type="text" id="about_signatureName">
+            </div>
+            <div class="form-group">
+              <label>İmza Unvan</label>
+              <input type="text" id="about_signatureRole">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Tecrübe Sayısı</label>
+              <input type="text" id="about_statNum">
+            </div>
+            <div class="form-group">
+              <label>Tecrübe Başlığı</label>
+              <input type="text" id="about_statLabel">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Services Tab -->
+      <div id="servicesTab" class="tab-content">
+        <div class="section-title-panel">Hizmetlerimiz (3 Sütun) <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button></div>
+        
+        <div class="card">
+          <div class="card-title">Genel Bilgiler</div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Kategori Etiketi</label>
+              <input type="text" id="services_tag">
+            </div>
+            <div class="form-group">
+              <label>Başlık</label>
+              <input type="text" id="services_title">
+            </div>
+          </div>
+        </div>
+
+        <div id="services_pillars_container">
+          <!-- Rendered dynamically for 3 pillars -->
+        </div>
+      </div>
+
+      <!-- 4. Projects Tab -->
+      <div id="projectsTab" class="tab-content">
+        <div class="section-title-panel">
+          Projelerimiz (Portföy) 
+          <div style="display:flex; gap:12px;">
+            <button class="btn-outline" onclick="openAddProjectModal()" style="font-size:11px;">Yeni Proje Ekle</button>
+            <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">Mevcut Projeler Listesi</div>
+          <div id="admin_projects_list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Values Tab -->
+      <div id="valuesTab" class="tab-content">
+        <div class="section-title-panel">Değerlerimiz <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button></div>
+        
+        <div class="card">
+          <div class="card-title">Genel Bilgiler</div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Kategori Etiketi</label>
+              <input type="text" id="values_tag">
+            </div>
+            <div class="form-group">
+              <label>Başlık</label>
+              <input type="text" id="values_title">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">İlkeler Listesi (6 Adet)</div>
+          <div id="values_list_container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Process Tab -->
+      <div id="processTab" class="tab-content">
+        <div class="section-title-panel">Çalışma Sürecimiz <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button></div>
+        
+        <div class="card">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Kategori Etiketi</label>
+              <input type="text" id="process_tag">
+            </div>
+            <div class="form-group">
+              <label>Başlık</label>
+              <input type="text" id="process_title">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Süreç Aşamaları (5 Adet)</div>
+          <div id="process_list_container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Contact Tab -->
+      <div id="contactTab" class="tab-content">
+        <div class="section-title-panel">İletişim & Alt Bilgi (Footer) <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button></div>
+        
+        <div class="card">
+          <div class="card-title">İletişim Bilgileri</div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Bölüm Etiketi</label>
+              <input type="text" id="contact_tag">
+            </div>
+            <div class="form-group">
+              <label>Başlık</label>
+              <input type="text" id="contact_title">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Telefon</label>
+              <input type="text" id="contact_phone">
+            </div>
+            <div class="form-group">
+              <label>E-Posta</label>
+              <input type="email" id="contact_email">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Ofis Adresleri</div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>1. Ofis Başlığı (Örn: Merkez Ofis)</label>
+              <input type="text" id="contact_centerOffice_title">
+            </div>
+            <div class="form-group">
+              <label>1. Ofis Adresi</label>
+              <textarea id="contact_centerOffice_text" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>2. Ofis Başlığı (Örn: Fabrika)</label>
+              <input type="text" id="contact_factoryOffice_title">
+            </div>
+            <div class="form-group">
+              <label>2. Ofis Adresi</label>
+              <textarea id="contact_factoryOffice_text" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Footer Ayarları</div>
+          <div class="form-group">
+            <label>Copyright (Telif Hakkı) Metni</label>
+            <input type="text" id="contact_footerText">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Project Edit/Add Modal Overlay -->
+<div id="projectModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+  <div class="card" style="width:100%; max-width:600px; padding:40px; border-color:var(--gold);">
+    <h3 class="section-title-panel" id="modalTitle" style="margin-bottom:20px; font-size:24px;">Proje Düzenle</h3>
+    
+    <input type="hidden" id="modal_project_index">
+    
+    <div class="form-group">
+      <label>Proje Adı</label>
+      <input type="text" id="modal_project_title">
+    </div>
+    
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="modal_project_cat">
+          <option value="Office">Office</option>
+          <option value="Retail">Retail</option>
+          <option value="Hospitality">Hospitality</option>
+          <option value="F&B">F&B</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Konum / Meta</label>
+        <input type="text" id="modal_project_meta">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>Proje Görseli</label>
+      <input type="text" id="modal_project_image" placeholder="Görsel URL veya Yükle">
+      <div class="media-preview-container">
+        <input type="file" accept="image/*" onchange="uploadFile(this, 'modal_project_image', 'modal_proj_preview')">
+        <img id="modal_proj_preview" class="media-preview" src="" alt="Önizleme">
+      </div>
+    </div>
+    
+    <div class="grid-2" style="margin-top:20px;">
+      <button class="btn-outline" onclick="closeProjectModal()">İptal</button>
+      <button class="btn" onclick="saveProjectFromModal()" style="margin-top:0;">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast element -->
+<div class="toast" id="toastMsg">Ayarlar başarıyla kaydedildi!</div>
+
+<!-- Hidden File Input for JSON import -->
+<input type="file" id="jsonFileInput" accept=".json" style="display:none;">
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>

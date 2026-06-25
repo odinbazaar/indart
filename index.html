@@ -49,19 +49,13 @@
   .cursor-ring.hover{width:64px;height:64px;background:var(--gold);opacity:.2;}
   @media (max-width: 900px){body{cursor:auto;}.cursor,.cursor-ring{display:none;}}
 
-  /* INDART LOGO (SVG) — recreated from brand mark */
+  /* INDART LOGO */
   .logo-mark{
     display:inline-flex;align-items:center;
-    color:currentColor;
   }
-  .logo-mark svg{height:28px;width:auto;display:block;}
-  .logo-mark .tag{
-    margin-left:10px;padding-left:10px;
-    border-left:1px solid currentColor;
-    font-size:8px;letter-spacing:.18em;text-transform:uppercase;
-    line-height:1.3;font-weight:500;font-family:var(--body);
-    opacity:.85;
-  }
+  .logo-mark img{height:32px;width:auto;display:block;}
+  .footer-left .logo-mark img{height:40px;}
+  .loader-logo img{height:48px;display:block;margin:0 auto;}
 
   /* Loading Screen */
   .loader{position:fixed;inset:0;background:var(--green-deep);z-index:10000;display:flex;align-items:center;justify-content:center;transition:opacity .8s ease, visibility .8s;}
@@ -465,30 +459,7 @@
 </head>
 <body>
 
-<!-- INDART Logo SVG (reusable) -->
-<svg width="0" height="0" style="position:absolute;">
-  <defs>
-    <symbol id="indart-logo" viewBox="0 0 320 60">
-      <!-- Horizontal axis line through middle -->
-      <line x1="0" y1="30" x2="295" y2="30" stroke="currentColor" stroke-width="1.2"/>
-      <!-- i (lowercase) -->
-      <path d="M 8 30 L 8 56 L 28 56 L 28 30" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
-      <circle cx="18" cy="14" r="4" fill="currentColor"/>
-      <line x1="18" y1="20" x2="18" y2="30" stroke="currentColor" stroke-width="3"/>
-      <!-- N -->
-      <path d="M 42 56 L 42 8 L 70 56 L 70 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
-      <!-- D -->
-      <path d="M 86 8 L 86 56 L 102 56 Q 116 56 116 32 Q 116 8 102 8 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
-      <!-- A -->
-      <path d="M 130 56 L 146 8 L 162 56 M 136 40 L 156 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
-      <!-- R -->
-      <path d="M 176 56 L 176 8 L 196 8 Q 208 8 208 20 Q 208 32 196 32 L 176 32 M 196 32 L 210 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
-      <!-- T (extends above the axis line) -->
-      <line x1="222" y1="0" x2="252" y2="0" stroke="currentColor" stroke-width="3"/>
-      <line x1="237" y1="0" x2="237" y2="56" stroke="currentColor" stroke-width="3"/>
-    </symbol>
-  </defs>
-</svg>
+
 
 <!-- Custom Cursor -->
 <div class="cursor"></div>
@@ -498,7 +469,7 @@
 <div class="loader" id="loader">
   <div class="loader-content">
     <div class="loader-logo">
-      <svg width="240" height="44"><use href="#indart-logo"/></svg>
+      <img src="logo-transparent.png" alt="INDART">
     </div>
     <div class="loader-bar"></div>
     <div class="loader-text">DESIGN · FIT-OUT · MANAGEMENT</div>
@@ -508,8 +479,7 @@
 <!-- NAV -->
 <nav id="nav">
   <a href="#" class="logo-mark">
-    <svg width="120" height="22"><use href="#indart-logo"/></svg>
-    <span class="tag">Design<br/>Fit-Out<br/>Management</span>
+    <img src="logo-transparent.png" alt="INDART">
   </a>
   <ul class="nav-links">
     <li><a href="#about">Hakkımızda</a></li>
@@ -994,9 +964,9 @@
     <div class="footer-content">
       <div class="footer-left">
         <a href="#" class="logo-mark">
-          <svg width="160" height="30"><use href="#indart-logo"/></svg>
+          <img src="logo-transparent.png" alt="INDART">
         </a>
-        <div class="footer-meta">© 2026 İNDART · Design · Fit-Out · Management · Tüm Hakları Saklıdır</div>
+        <div class="footer-meta">© 2026 İNDART · Design · Fit-Out · Management · Tüm Hakları Saklıdır · <a href="admin.html" style="color: inherit; text-decoration: none; opacity: 0.6; transition: opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">Yönetim</a></div>
       </div>
       <div class="footer-right">
         <div class="footer-address">
@@ -1010,8 +980,8 @@
     </div>
   </footer>
 </section>
-
-<script>
+<script type="module" src="siteData.js"></script>
+<script type="module">
   // Loader
   window.addEventListener('load',()=>{
     setTimeout(()=>document.getElementById('loader').classList.add('hidden'),1900);
