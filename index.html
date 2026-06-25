@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>İNDART — Design · Fit-Out · Management</title>
+<meta name="description" content="İNDART — Design, Fit-Out & Management. Kurumsal mekânları konseptten teslime kadar uçtan uca yönetiyoruz." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --green-deep:#005a35;
+    --green:#007a45;
+    --green-mid:#009055;
+    --green-light:#1aa066;
+    --gold:#c9a86a;
+    --gold-soft:#d4b884;
+    --cream:#f5f1e8;
+    --paper:#fafaf7;
+    --ink:#0a0f0c;
+    --ink-soft:#2a2f2c;
+    --grey:#9a9c98;
+    --grey-line:#d8d6cf;
+    --display: 'Cormorant Garamond', 'Times New Roman', serif;
+    --body: 'Inter', -apple-system, sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body);
+    background:var(--paper);
+    color:var(--ink);
+    overflow-x:hidden;
+    font-weight:300;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    cursor:none;
+  }
+  ::selection{background:var(--green);color:var(--cream);}
+
+  /* Custom Cursor */
+  .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .25s, height .25s;mix-blend-mode:difference;}
+  .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .15s ease-out, width .25s, height .25s;opacity:.6;}
+  .cursor.hover{width:0;height:0;}
+  .cursor-ring.hover{width:64px;height:64px;background:var(--gold);opacity:.2;}
+  @media (max-width: 900px){body{cursor:auto;}.cursor,.cursor-ring{display:none;}}
+
+  /* INDART LOGO (SVG) — recreated from brand mark */
+  .logo-mark{
+    display:inline-flex;align-items:center;
+    color:currentColor;
+  }
+  .logo-mark svg{height:28px;width:auto;display:block;}
+  .logo-mark .tag{
+    margin-left:10px;padding-left:10px;
+    border-left:1px solid currentColor;
+    font-size:8px;letter-spacing:.18em;text-transform:uppercase;
+    line-height:1.3;font-weight:500;font-family:var(--body);
+    opacity:.85;
+  }
+
+  /* Loading Screen */
+  .loader{position:fixed;inset:0;background:var(--green-deep);z-index:10000;display:flex;align-items:center;justify-content:center;transition:opacity .8s ease, visibility .8s;}
+  .loader.hidden{opacity:0;visibility:hidden;}
+  .loader-content{text-align:center;color:var(--gold);}
+  .loader-logo{margin-bottom:32px;animation:loaderFade 1s .2s both;}
+  .loader-logo svg{height:48px;}
+  @keyframes loaderFade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .loader-bar{width:200px;height:1px;background:rgba(201,168,106,.2);position:relative;margin:0 auto;}
+  .loader-bar::after{content:'';position:absolute;left:0;top:0;height:100%;background:var(--gold);animation:loadBar 1.6s cubic-bezier(.6,.05,.2,1) forwards;}
+  @keyframes loadBar{from{width:0;}to{width:100%;}}
+  .loader-text{font-size:10px;letter-spacing:.4em;color:var(--gold);margin-top:20px;opacity:.7;}
+
+  /* Navigation */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    padding:22px 48px;
+    display:flex;justify-content:space-between;align-items:center;
+    transition:all .4s ease;
+  }
+  nav .logo-mark{color:var(--cream);}
+  nav.scrolled{
+    padding:16px 48px;
+    background:rgba(250,250,247,.92);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--grey-line);
+  }
+  nav.scrolled .logo-mark{color:var(--ink);}
+  .nav-links{display:flex;gap:40px;list-style:none;align-items:center;}
+  .nav-links a{
+    color:var(--cream);text-decoration:none;
+    font-size:12px;font-weight:400;letter-spacing:.15em;text-transform:uppercase;
+    position:relative;transition:color .4s;
+  }
+  nav.scrolled .nav-links a{color:var(--ink);}
+  .nav-links a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:1px;background:currentColor;transition:width .4s ease;}
+  .nav-links a:hover::after{width:100%;}
+
+  .nav-cta{
+    padding:10px 22px;border:1px solid var(--cream);color:var(--cream);
+    text-decoration:none;font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+    transition:all .4s;
+  }
+  nav.scrolled .nav-cta{border-color:var(--ink);color:var(--ink);}
+  .nav-cta:hover{background:var(--gold);border-color:var(--gold);color:var(--ink)!important;}
+
+  .menu-toggle{display:none;background:none;border:none;cursor:none;color:inherit;}
+  @media (max-width:900px){
+    nav{padding:18px 24px;}
+    .nav-links,.nav-cta{display:none;}
+    .menu-toggle{display:block;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--cream);}
+    nav.scrolled .menu-toggle{color:var(--ink);}
+  }
+
+  /* HERO */
+  .hero{position:relative;height:100vh;min-height:720px;overflow:hidden;background:var(--green-deep);}
+
+  /* Video Slider */
+  .hero-slider{position:absolute;inset:0;z-index:0;}
+  .hero-slide{
+    position:absolute;inset:0;
+    opacity:0;
+    transition:opacity 1.8s cubic-bezier(.4,0,.2,1);
+    z-index:0;
+  }
+  .hero-slide.active{
+    opacity:1;
+    z-index:1;
+  }
+  .hero-slide video{
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .hero-slide-overlay{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(180deg, rgba(0,90,53,.45) 0%, rgba(0,40,24,.80) 100%);
+    pointer-events:none;
+  }
+
+  /* Slide Indicators */
+  .hero-indicators{
+    position:absolute;
+    right:48px;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:5;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .hero-indicator{
+    width:3px;
+    height:32px;
+    background:rgba(245,241,232,.3);
+    border:none;
+    cursor:pointer;
+    padding:0;
+    position:relative;
+    overflow:hidden;
+    transition:background .3s;
+  }
+  .hero-indicator:hover{
+    background:rgba(245,241,232,.5);
+  }
+  .hero-indicator::after{
+    content:'';
+    position:absolute;
+    left:0;top:0;
+    width:100%;
+    height:0%;
+    background:var(--gold);
+    transition:height .3s;
+  }
+  .hero-indicator.active::after{
+    height:100%;
+    /* duration set dynamically via JS based on video length */
+    transition:height var(--indicator-duration, 10s) linear;
+  }
+  .hero-indicator.instant::after{
+    transition:none;
+  }
+
+  .hero-grain{position:absolute;inset:0;opacity:.07;pointer-events:none;z-index:2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  .hero-content{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;color:var(--cream);max-width:1600px;margin:0 auto;}
+  .hero-meta{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(245,241,232,.25);padding-top:32px;opacity:0;animation:fadeUp 1s 1.2s forwards;flex-wrap:wrap;gap:24px;}
+  .hero-eyebrow{font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:24px;display:flex;align-items:center;gap:14px;opacity:0;animation:fadeUp 1s .4s forwards;}
+  .hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--gold);}
+
+  h1.hero-title{
+    font-family:var(--display);font-weight:300;
+    font-size:clamp(48px,8vw,128px);
+    line-height:.98;letter-spacing:-.02em;
+    margin-bottom:32px;max-width:14ch;
+  }
+  h1.hero-title .line{display:block;overflow:hidden;}
+  h1.hero-title .line span{display:inline-block;transform:translateY(105%);animation:slideUp 1.2s cubic-bezier(.6,.05,.2,1) forwards;}
+  h1.hero-title .line:nth-child(1) span{animation-delay:.5s;}
+  h1.hero-title .line:nth-child(2) span{animation-delay:.65s;font-style:italic;color:var(--gold);}
+  h1.hero-title .line:nth-child(3) span{animation-delay:.8s;}
+  @keyframes slideUp{to{transform:translateY(0);}}
+
+  .hero-meta-left{font-size:13px;letter-spacing:.05em;max-width:420px;opacity:.85;line-height:1.6;}
+  .hero-stats{display:flex;gap:48px;}
+  .hero-stat strong{display:block;font-family:var(--display);font-size:48px;font-weight:300;color:var(--cream);line-height:1;}
+  .hero-stat span{font-size:10px;letter-spacing:.25em;text-transform:uppercase;opacity:.7;margin-top:8px;display:block;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+  .scroll-cue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);color:var(--cream);font-size:10px;letter-spacing:.3em;text-transform:uppercase;opacity:0;animation:fadeUp 1s 1.6s forwards;z-index:4;}
+  .scroll-cue::after{content:'';display:block;width:1px;height:40px;background:var(--gold);margin:12px auto 0;animation:scrollLine 2s ease-in-out infinite;transform-origin:top;}
+  @keyframes scrollLine{0%,100%{transform:scaleY(.3);opacity:.3;}50%{transform:scaleY(1);opacity:1;}}
+
+  @media (max-width:900px){
+    .hero-content{padding:0 24px 60px;}
+    .hero-meta{flex-direction:column;align-items:flex-start;}
+    .hero-stats{gap:24px;}
+    .hero-stat strong{font-size:32px;}
+    .hero-indicators{right:16px;gap:8px;}
+    .hero-indicator{height:24px;}
+  }
+
+  /* Marquee */
+  .marquee{background:var(--ink);color:var(--cream);padding:24px 0;overflow:hidden;border-top:1px solid var(--ink-soft);border-bottom:1px solid var(--ink-soft);}
+  .marquee-track{display:flex;gap:80px;animation:slide 40s linear infinite;white-space:nowrap;}
+  .marquee span{font-family:var(--display);font-style:italic;font-size:32px;font-weight:300;display:inline-flex;align-items:center;gap:80px;}
+  .marquee span::after{content:'✦';font-style:normal;color:var(--gold);font-size:14px;}
+  @keyframes slide{to{transform:translateX(-50%);}}
+
+  /* SECTION GENERAL */
+  section{padding:140px 48px;position:relative;}
+  .container{max-width:1400px;margin:0 auto;}
+  .section-tag{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--green);margin-bottom:24px;display:inline-flex;align-items:center;gap:14px;}
+  .section-tag::before{content:'';width:24px;height:1px;background:var(--green);}
+  .section-title{font-family:var(--display);font-weight:300;font-size:clamp(40px,5.5vw,80px);line-height:1.05;letter-spacing:-.015em;margin-bottom:48px;}
+  .section-title em{font-style:italic;color:var(--green);}
+
+  /* ABOUT */
+  .about{background:var(--paper);}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center;}
+  .about-image{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--cream);}
+  .about-image img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.2,.8,.2,1);}
+  .about-image:hover img{transform:scale(1.06);}
+  .about-image::after{content:'EST. 2008';position:absolute;bottom:24px;left:24px;color:var(--cream);font-size:10px;letter-spacing:.3em;background:var(--green);padding:8px 14px;}
+
+  .about-text p{font-size:18px;line-height:1.75;color:var(--ink-soft);margin-bottom:20px;max-width:46ch;}
+  .about-text p.lead{font-family:var(--display);font-size:clamp(22px,2vw,28px);line-height:1.45;color:var(--ink);margin-bottom:32px;font-style:italic;font-weight:400;}
+  .signature{margin-top:48px;padding-top:32px;border-top:1px solid var(--grey-line);display:flex;justify-content:space-between;align-items:flex-end;}
+  .signature-name{font-family:var(--display);font-size:24px;font-weight:400;}
+  .signature-role{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);}
+  .stat{text-align:right;}
+  .stat-num{font-family:var(--display);font-size:56px;font-weight:300;color:var(--green);line-height:1;}
+  .stat-label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--grey);margin-top:6px;}
+
+  @media (max-width:900px){
+    section{padding:80px 24px;}
+    .about-grid{grid-template-columns:1fr;gap:56px;}
+  }
+
+  /* SERVICES — three pillars */
+  .services{background:var(--ink);color:var(--cream);position:relative;overflow:hidden;}
+  .services .section-tag{color:var(--gold);}
+  .services .section-tag::before{background:var(--gold);}
+  .services .section-title em{color:var(--gold);}
+
+  .pillars{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    margin-top:64px;
+    border-top:1px solid rgba(245,241,232,.15);
+  }
+  .pillar{
+    padding:56px 40px;
+    border-right:1px solid rgba(245,241,232,.15);
+    border-bottom:1px solid rgba(245,241,232,.15);
+    transition:background .5s;
+    cursor:none;
+    position:relative;
+  }
+  .pillar:last-child{border-right:none;}
+  .pillar:hover{background:rgba(201,168,106,.06);}
+  .pillar-num{font-family:var(--display);font-size:13px;color:var(--gold);letter-spacing:.15em;display:block;margin-bottom:32px;}
+  .pillar-icon{width:56px;height:56px;color:var(--gold);margin-bottom:32px;transition:transform .6s cubic-bezier(.2,.8,.2,1);}
+  .pillar:hover .pillar-icon{transform:rotate(-6deg) scale(1.08);}
+  .pillar-title{font-family:var(--display);font-size:42px;font-weight:400;margin-bottom:8px;letter-spacing:-.01em;}
+  .pillar-title em{font-style:italic;color:var(--gold);}
+  .pillar-sub{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:rgba(245,241,232,.5);margin-bottom:24px;}
+  .pillar-desc{font-size:14px;line-height:1.7;color:rgba(245,241,232,.7);margin-bottom:32px;}
+  .pillar ul{list-style:none;}
+  .pillar ul li{
+    font-size:13px;color:rgba(245,241,232,.6);
+    padding:10px 0;border-bottom:1px solid rgba(245,241,232,.08);
+    display:flex;align-items:center;gap:10px;
+  }
+  .pillar ul li::before{content:'—';color:var(--gold);}
+  .pillar ul li:last-child{border-bottom:none;}
+
+  @media (max-width:900px){
+    .pillars{grid-template-columns:1fr;}
+    .pillar{border-right:none;padding:40px 24px;}
+  }
+
+  /* PROJECTS */
+  .projects{background:var(--cream);}
+  .projects-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px;flex-wrap:wrap;gap:24px;}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;}
+  .filter{padding:10px 20px;border:1px solid var(--grey-line);background:transparent;font-family:var(--body);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);cursor:none;transition:all .3s;border-radius:100px;}
+  .filter:hover{border-color:var(--green);color:var(--green);}
+  .filter.active{background:var(--green);color:var(--cream);border-color:var(--green);}
+
+  .projects-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:160px;gap:16px;}
+  .project{position:relative;overflow:hidden;background:var(--ink);cursor:none;}
+  .project img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.8,.2,1), filter .6s;filter:saturate(.85);}
+  .project:hover img{transform:scale(1.08);filter:saturate(1.1);}
+  .project-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,60,35,.95) 100%);padding:32px;display:flex;flex-direction:column;justify-content:flex-end;color:var(--cream);opacity:0;transition:opacity .5s ease;}
+  .project:hover .project-overlay{opacity:1;}
+  .project-cat{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+  .project-title{font-family:var(--display);font-size:28px;font-weight:400;line-height:1.1;}
+  .project-meta{font-size:12px;opacity:.7;margin-top:4px;letter-spacing:.05em;}
+
+  .project:nth-child(1){grid-column:span 7;grid-row:span 3;}
+  .project:nth-child(2){grid-column:span 5;grid-row:span 2;}
+  .project:nth-child(3){grid-column:span 5;grid-row:span 3;}
+  .project:nth-child(4){grid-column:span 4;grid-row:span 2;}
+  .project:nth-child(5){grid-column:span 8;grid-row:span 2;}
+  .project:nth-child(6){grid-column:span 4;grid-row:span 3;}
+  .project:nth-child(7){grid-column:span 5;grid-row:span 2;}
+  .project:nth-child(8){grid-column:span 7;grid-row:span 2;}
+
+  @media (max-width:900px){
+    .projects-grid{grid-template-columns:1fr;grid-auto-rows:300px;}
+    .project{grid-column:span 1!important;grid-row:span 1!important;}
+  }
+
+  /* CLIENTS */
+  .clients{background:var(--paper);padding:100px 48px;border-top:1px solid var(--grey-line);border-bottom:1px solid var(--grey-line);}
+  .clients-title{text-align:center;font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--grey);margin-bottom:48px;}
+  .clients-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:48px;align-items:center;justify-items:center;}
+  .clients-grid > div{
+    font-family:var(--display);
+    font-size:24px;font-weight:400;letter-spacing:.05em;
+    color:var(--grey);opacity:.6;
+    transition:opacity .3s, color .3s;cursor:none;
+  }
+  .clients-grid > div:hover{opacity:1;color:var(--green);}
+  .clients-grid > div.italic{font-style:italic;}
+  @media (max-width:900px){.clients-grid{grid-template-columns:repeat(2,1fr);gap:32px;}}
+
+  /* VALUES */
+  .values{background:var(--green-deep);color:var(--cream);position:relative;overflow:hidden;}
+  .values::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px, rgba(245,241,232,.07) 1px, transparent 0);background-size:40px 40px;pointer-events:none;}
+  .values .section-tag{color:var(--gold);}
+  .values .section-tag::before{background:var(--gold);}
+  .values .section-title em{color:var(--gold);}
+
+  .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(245,241,232,.1);border:1px solid rgba(245,241,232,.1);margin-top:64px;}
+  .value{background:var(--green-deep);padding:48px 40px;transition:background .5s;position:relative;cursor:none;}
+  .value:hover{background:#003e26;}
+  .value-num{font-family:var(--display);font-size:13px;color:var(--gold);letter-spacing:.15em;margin-bottom:32px;display:block;}
+  .value-icon{width:48px;height:48px;margin-bottom:24px;color:var(--gold);transition:transform .6s cubic-bezier(.2,.8,.2,1);}
+  .value:hover .value-icon{transform:rotate(-8deg) scale(1.1);}
+  .value h3{font-family:var(--display);font-size:28px;font-weight:400;margin-bottom:16px;}
+  .value p{font-size:14px;line-height:1.7;color:rgba(245,241,232,.65);}
+
+  @media (max-width:900px){.values-grid{grid-template-columns:1fr;}}
+
+  /* PROCESS */
+  .process{background:var(--paper);}
+  .process-list{margin-top:64px;border-top:1px solid var(--grey-line);}
+  .process-item{display:grid;grid-template-columns:120px 1fr 2fr;gap:48px;padding:40px 0;border-bottom:1px solid var(--grey-line);align-items:center;transition:padding-left .4s;cursor:none;}
+  .process-item:hover{padding-left:24px;background:linear-gradient(90deg,var(--cream) 0%,transparent 100%);}
+  .process-num{font-family:var(--display);font-size:64px;font-weight:300;color:var(--green);line-height:1;}
+  .process-name{font-family:var(--display);font-size:32px;font-weight:400;}
+  .process-name em{font-style:italic;color:var(--green);}
+  .process-desc{font-size:15px;line-height:1.7;color:var(--ink-soft);max-width:48ch;}
+
+  @media (max-width:900px){
+    .process-item{grid-template-columns:1fr;gap:12px;}
+    .process-num{font-size:40px;}
+    .process-name{font-size:24px;}
+  }
+
+  /* CTA STRIP */
+  .cta-strip{
+    background:var(--green);color:var(--cream);
+    padding:80px 48px;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .cta-strip::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 30% 50%, rgba(201,168,106,.15) 0%, transparent 50%);
+    pointer-events:none;
+  }
+  .cta-strip h2{
+    font-family:var(--display);font-weight:300;
+    font-size:clamp(36px,5vw,64px);line-height:1.1;
+    margin-bottom:32px;letter-spacing:-.01em;
+    position:relative;z-index:1;
+  }
+  .cta-strip h2 em{font-style:italic;color:var(--gold);}
+  .cta-btn{
+    display:inline-block;padding:18px 48px;
+    background:var(--gold);color:var(--ink);text-decoration:none;
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+    border-radius:100px;transition:all .4s;position:relative;z-index:1;
+  }
+  .cta-btn:hover{background:var(--cream);transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.3);}
+
+  /* CONTACT */
+  .contact{background:var(--ink);color:var(--cream);padding:140px 48px 0;}
+  .contact .section-title em{color:var(--gold);}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:96px;margin-top:64px;}
+
+  .contact-form{display:flex;flex-direction:column;gap:32px;}
+  .field{position:relative;}
+  .field input,.field textarea{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(245,241,232,.3);padding:16px 0;color:var(--cream);font-family:var(--body);font-size:16px;font-weight:300;transition:border-color .3s;resize:none;}
+  .field textarea{min-height:120px;}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--gold);}
+  .field label{position:absolute;left:0;top:16px;font-size:14px;color:rgba(245,241,232,.5);letter-spacing:.05em;pointer-events:none;transition:all .3s;}
+  .field input:focus + label,.field input:valid + label,.field textarea:focus + label,.field textarea:valid + label{top:-12px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+
+  .submit-btn{align-self:flex-start;background:var(--gold);color:var(--ink);border:none;padding:18px 40px;font-family:var(--body);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;cursor:none;transition:all .4s;margin-top:16px;border-radius:100px;}
+  .submit-btn:hover{background:var(--cream);transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,168,106,.25);}
+
+          <h3>Merkez Ofis</h3>
+          <p>Barbaros Mah. İkizler Sok. No:18<br/>ATAŞEHİR — İSTANBUL</p>
+          
+          <h3>Fabrika</h3>
+          <p>Fatih Mah. Katip Çelebi Cad. No:53<br/>ORHANLI TUZLA — İSTANBUL</p>
+          
+          <h3>İletişim</h3>
+          <a href="tel:+902163150767">0 216 315 07 67</a>
+          <a href="mailto:indart@indart.com.tr">indart@indart.com.tr</a>
+
+  .socials{display:flex;gap:16px;margin-top:24px;}
+  .socials a{width:44px;height:44px;border:1px solid rgba(245,241,232,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:13px;font-family:var(--body);font-weight:500;letter-spacing:0;transition:all .3s;}
+  .socials a:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+
+  /* FOOTER */
+  footer{background:var(--ink);color:var(--cream);border-top:1px solid rgba(245,241,232,.1);margin-top:96px;padding:48px;}
+  .footer-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;}
+  .footer-content .logo-mark{color:var(--cream);}
+  .footer-content .logo-mark svg{height:36px;}
+  .footer-meta{font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.5;}
+
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  .reveal-delay-1{transition-delay:.1s;}
+  .reveal-delay-2{transition-delay:.2s;}
+  .reveal-delay-3{transition-delay:.3s;}
+  .reveal-delay-4{transition-delay:.4s;}
+
+  @media (max-width:900px){
+    .contact-grid{grid-template-columns:1fr;gap:64px;}
+    .contact{padding:80px 24px 0;}
+  }
+
+</style>
+</head>
+<body>
+
+<!-- INDART Logo SVG (reusable) -->
+<svg width="0" height="0" style="position:absolute;">
+  <defs>
+    <symbol id="indart-logo" viewBox="0 0 320 60">
+      <!-- Horizontal axis line through middle -->
+      <line x1="0" y1="30" x2="295" y2="30" stroke="currentColor" stroke-width="1.2"/>
+      <!-- i (lowercase) -->
+      <path d="M 8 30 L 8 56 L 28 56 L 28 30" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
+      <circle cx="18" cy="14" r="4" fill="currentColor"/>
+      <line x1="18" y1="20" x2="18" y2="30" stroke="currentColor" stroke-width="3"/>
+      <!-- N -->
+      <path d="M 42 56 L 42 8 L 70 56 L 70 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
+      <!-- D -->
+      <path d="M 86 8 L 86 56 L 102 56 Q 116 56 116 32 Q 116 8 102 8 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
+      <!-- A -->
+      <path d="M 130 56 L 146 8 L 162 56 M 136 40 L 156 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
+      <!-- R -->
+      <path d="M 176 56 L 176 8 L 196 8 Q 208 8 208 20 Q 208 32 196 32 L 176 32 M 196 32 L 210 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="miter"/>
+      <!-- T (extends above the axis line) -->
+      <line x1="222" y1="0" x2="252" y2="0" stroke="currentColor" stroke-width="3"/>
+      <line x1="237" y1="0" x2="237" y2="56" stroke="currentColor" stroke-width="3"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Custom Cursor -->
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="loader-content">
+    <div class="loader-logo">
+      <svg width="240" height="44"><use href="#indart-logo"/></svg>
+    </div>
+    <div class="loader-bar"></div>
+    <div class="loader-text">DESIGN · FIT-OUT · MANAGEMENT</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo-mark">
+    <svg width="120" height="22"><use href="#indart-logo"/></svg>
+    <span class="tag">Design<br/>Fit-Out<br/>Management</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">Hakkımızda</a></li>
+    <li><a href="#services">Hizmetler</a></li>
+    <li><a href="#projects">Projeler</a></li>
+    <li><a href="#values">Değerler</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Teklif Al</a>
+  <button class="menu-toggle">Menü</button>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <!-- Video Slider -->
+  <div class="hero-slider" id="heroSlider">
+    <div class="hero-slide active">
+      <video muted autoplay playsinline>
+        <source src="hero-video-1-opt.webm" type="video/webm">
+        <source src="hero-video-1-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-2-opt.webm" type="video/webm">
+        <source src="hero-video-2-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-3-opt.webm" type="video/webm">
+        <source src="hero-video-3-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-4-opt.webm" type="video/webm">
+        <source src="hero-video-4-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-5-opt.webm" type="video/webm">
+        <source src="hero-video-5-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-6-opt.webm" type="video/webm">
+        <source src="hero-video-6-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-7-opt.webm" type="video/webm">
+        <source src="hero-video-7-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-8-opt.webm" type="video/webm">
+        <source src="hero-video-8-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-9-opt.webm" type="video/webm">
+        <source src="hero-video-9-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide">
+      <video muted playsinline>
+        <source src="hero-video-10-opt.webm" type="video/webm">
+        <source src="hero-video-10-opt.mp4" type="video/mp4">
+      </video>
+      <div class="hero-slide-overlay"></div>
+    </div>
+  </div>
+
+  <!-- Slide Indicators -->
+  <div class="hero-indicators" id="heroIndicators">
+    <button class="hero-indicator active" data-slide="0" aria-label="Slayt 1"></button>
+    <button class="hero-indicator" data-slide="1" aria-label="Slayt 2"></button>
+    <button class="hero-indicator" data-slide="2" aria-label="Slayt 3"></button>
+    <button class="hero-indicator" data-slide="3" aria-label="Slayt 4"></button>
+    <button class="hero-indicator" data-slide="4" aria-label="Slayt 5"></button>
+    <button class="hero-indicator" data-slide="5" aria-label="Slayt 6"></button>
+    <button class="hero-indicator" data-slide="6" aria-label="Slayt 7"></button>
+    <button class="hero-indicator" data-slide="7" aria-label="Slayt 8"></button>
+    <button class="hero-indicator" data-slide="8" aria-label="Slayt 9"></button>
+    <button class="hero-indicator" data-slide="9" aria-label="Slayt 10"></button>
+  </div>
+
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Design · Fit-Out · Management</div>
+    <h1 class="hero-title">
+      <span class="line"><span>Kurumsal mekânları</span></span>
+      <span class="line"><span>uçtan uca</span></span>
+      <span class="line"><span>biz teslim ediyoruz.</span></span>
+    </h1>
+    <div class="hero-meta">
+      <div class="hero-meta-left">
+        Konseptten anahtar teslime kadar; otel, mağaza, iş merkezi ve executive ofis projelerinde tasarım, uygulama ve proje yönetimini tek elden sürdürüyoruz.
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>20+</strong><span>Yıllık Tecrübe</span></div>
+        <div class="hero-stat"><strong>500+</strong><span>Tamamlanan Proje</span></div>
+        <div class="hero-stat"><strong>50+</strong><span>Uzman Ekip</span></div>
+        <div class="hero-stat"><strong>10.000+</strong><span>m² Üretim Alanı</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue">Aşağı Kaydır</div>
+</header>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>Office Fit-Out</span>
+    <span>Retail Design</span>
+    <span>Hospitality</span>
+    <span>Project Management</span>
+    <span>Turn-Key Delivery</span>
+    <span>Office Fit-Out</span>
+    <span>Retail Design</span>
+    <span>Hospitality</span>
+    <span>Project Management</span>
+    <span>Turn-Key Delivery</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image reveal">
+        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1200&q=85" alt="İNDART Atölye" />
+      </div>
+      <div class="about-text">
+        <div class="section-tag reveal">Hakkımızda</div>
+        <h2 class="section-title reveal reveal-delay-1">Tasarımı, uygulamayı ve süreci <em>tek elden</em> yönetiyoruz.</h2>
+        <p class="lead reveal reveal-delay-2">
+          Mekânın hikâyesi, sadece çizimde değil; şantiyede de yazılır.
+        </p>
+        <p class="reveal reveal-delay-3">
+          İNDART; 2008'den bu yana kurumsal müşteriler için otel, mağaza, iş merkezi ve executive ofis projelerinde tasarım, fit-out uygulama ve proje yönetimini tek bir sorumluluk çatısı altında sürdürüyor.
+        </p>
+        <p class="reveal reveal-delay-3">
+          Mikro Proje Yönetimi yaklaşımımızla; her saatin ve her günün sonunda gerçekleşmesi gereken üretimi biliyor, oluşabilecek sorunları aylar öncesinden öngörüyoruz.
+        </p>
+        <div class="signature reveal reveal-delay-4">
+          <div>
+            <div class="signature-name">Selim İndar</div>
+            <div class="signature-role">Kurucu Ortak · Genel Müdür</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">17</div>
+            <div class="stat-label">Yıl Deneyim</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES — three pillars matching logo -->
+<section class="services" id="services">
+  <div class="container">
+    <div class="section-tag reveal">Üç Sütun · Tek Sorumluluk</div>
+    <h2 class="section-title reveal reveal-delay-1">Design · <em>Fit-Out</em> · Management</h2>
+
+    <div class="pillars">
+      <div class="pillar reveal">
+        <span class="pillar-num">— 01</span>
+        <svg class="pillar-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M8 40 L8 14 L24 6 L40 14 L40 40"/>
+          <path d="M16 40 L16 24 L32 24 L32 40"/>
+          <path d="M22 24 L22 14"/>
+        </svg>
+        <h3 class="pillar-title"><em>Design</em></h3>
+        <div class="pillar-sub">Mimari Tasarım · Konsept · 3D</div>
+        <p class="pillar-desc">Doğru üretim doğru tasarımla başlar. Uzman ekibimizle tüm ihtiyaçlarınızı karşılayacak mimari tasarımlar yapıyoruz.</p>
+        <ul>
+          <li>Konsept Geliştirme</li>
+          <li>Mimari Projelendirme</li>
+          <li>2B Çizimler & 3D Görselleştirme</li>
+          <li>Sunum & İmalat Çizimleri</li>
+        </ul>
+      </div>
+
+      <div class="pillar reveal reveal-delay-1">
+        <span class="pillar-num">— 02</span>
+        <svg class="pillar-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M6 32 L24 14 L42 32"/>
+          <path d="M12 28 L12 42 L36 42 L36 28"/>
+          <path d="M20 42 L20 32 L28 32 L28 42"/>
+          <circle cx="24" cy="22" r="2" fill="currentColor"/>
+        </svg>
+        <h3 class="pillar-title"><em>Fit-Out</em></h3>
+        <div class="pillar-sub">Uygulama · Üretim · Müteahhitlik</div>
+        <p class="pillar-desc">Türkiye'deki 4 farklı büyük çözüm ortağımızla 100.000 m² kapalı alanda üretim kapasitesine sahibiz.</p>
+        <ul>
+          <li>Anahtar Teslim Uygulama</li>
+          <li>Hareketli & Sabit Mobilya</li>
+          <li>Mekanik & Elektrik Tesisat</li>
+          <li>Asma Tavan & Bölme Duvar</li>
+        </ul>
+      </div>
+
+      <div class="pillar reveal reveal-delay-2">
+        <span class="pillar-num">— 03</span>
+        <svg class="pillar-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="24" cy="24" r="18"/>
+          <path d="M24 8 L24 24 L36 30"/>
+          <path d="M14 24 L18 24 M30 24 L34 24"/>
+        </svg>
+        <h3 class="pillar-title"><em>Management</em></h3>
+        <div class="pillar-sub">Mikro Proje Yönetimi</div>
+        <p class="pillar-desc">Her saat ve her gün güncellenen hareket planıyla projeyi yüksek verimlilikle yönetiyoruz.</p>
+        <ul>
+          <li>Proje & Maliyet Yönetimi</li>
+          <li>Zaman & Ekip Planlama</li>
+          <li>Maliyet Optimizasyonu</li>
+          <li>Şeffaf Süreç Raporlama</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="container">
+    <div class="projects-header">
+      <div>
+        <div class="section-tag reveal">Seçili Projeler</div>
+        <h2 class="section-title reveal reveal-delay-1">Portföy <em>2018 — 2025</em></h2>
+      </div>
+      <div class="filters reveal reveal-delay-2">
+        <button class="filter active">Tümü</button>
+        <button class="filter">Office</button>
+        <button class="filter">Retail</button>
+        <button class="filter">Hospitality</button>
+        <button class="filter">F&B</button>
+      </div>
+    </div>
+
+    <div class="projects-grid">
+      <div class="project reveal">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=85" alt="Arkas Holding" />
+        <div class="project-overlay">
+          <div class="project-cat">Office Fit-Out</div>
+          <div class="project-title">Arkas Holding</div>
+          <div class="project-meta">Marmaris, Türkiye</div>
+        </div>
+      </div>
+      <div class="project reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=1200&q=85" alt="Radisson Blu" />
+        <div class="project-overlay">
+          <div class="project-cat">Hotel</div>
+          <div class="project-title">Radisson Blu</div>
+          <div class="project-meta">İstanbul, Türkiye</div>
+        </div>
+      </div>
+      <div class="project reveal reveal-delay-2">
+        <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&q=85" alt="Smolenskaya FS Studio" />
+        <div class="project-overlay">
+          <div class="project-cat">Retail</div>
+          <div class="project-title">Smolenskaya FS Studio</div>
+          <div class="project-meta">Moskova, Rusya</div>
+        </div>
+      </div>
+      <div class="project reveal">
+        <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=1200&q=85" alt="Rixoss Hotel" />
+        <div class="project-overlay">
+          <div class="project-cat">Hotel</div>
+          <div class="project-title">Rixoss Hotel</div>
+          <div class="project-meta">Bodrum, Türkiye</div>
+        </div>
+      </div>
+      <div class="project reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1400&q=85" alt="Antwerp Fletcher Hotel" />
+        <div class="project-overlay">
+          <div class="project-cat">Hotel</div>
+          <div class="project-title">Antwerp Fletcher Hotel</div>
+          <div class="project-meta">Antwerp, Belçika</div>
+        </div>
+      </div>
+      <div class="project reveal reveal-delay-2">
+        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1000&q=85" alt="Kefalonia Hotel" />
+        <div class="project-overlay">
+          <div class="project-cat">Hotel</div>
+          <div class="project-title">Kefalonia Hotel</div>
+          <div class="project-meta">Yunanistan</div>
+        </div>
+      </div>
+      <div class="project reveal">
+        <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200&q=85" alt="Divan Hotel" />
+        <div class="project-overlay">
+          <div class="project-cat">Hotel</div>
+          <div class="project-title">Divan Hotel</div>
+          <div class="project-meta">İstanbul, Türkiye</div>
+        </div>
+      </div>
+      <div class="project reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&q=85" alt="DeFacto" />
+        <div class="project-overlay">
+          <div class="project-cat">Retail</div>
+          <div class="project-title">DeFacto</div>
+          <div class="project-meta">Global Mağazalar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section class="clients">
+  <div class="container">
+    <div class="clients-title reveal">Birlikte Çalıştığımız Markalar</div>
+    <div class="clients-grid reveal reveal-delay-1">
+      <div>NORDA</div>
+      <div class="italic">Soren & Co.</div>
+      <div>HALDA GROUP</div>
+      <div class="italic">Maison Verte</div>
+      <div>ATLAS</div>
+      <div class="italic">Studio Nine</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values" id="values">
+  <div class="container">
+    <div class="section-tag reveal">Değerlerimiz</div>
+    <h2 class="section-title reveal reveal-delay-1">Bizi yönlendiren <em>altı ilke.</em></h2>
+    <div class="values-grid">
+      <div class="value reveal">
+        <span class="value-num">— 01</span>
+        <svg class="value-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 40 V20 L24 8 L40 20 V40 Z M18 40 V28 H30 V40"/></svg>
+        <h3>Deneyim</h3>
+        <p>Kurumsal mekân tasarımlarında yılların getirdiği derin tecrübe ile hareket ediyoruz.</p>
+      </div>
+      <div class="value reveal reveal-delay-1">
+        <span class="value-num">— 02</span>
+        <svg class="value-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="24" cy="24" r="16"/><path d="M24 8 V24 L36 30"/></svg>
+        <h3>Profesyonellik</h3>
+        <p>Tüm süreçlerde uluslararası standartlarda profesyonel yaklaşım sergiliyoruz.</p>
+      </div>
+      <div class="value reveal reveal-delay-2">
+        <span class="value-num">— 03</span>
+        <svg class="value-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 40 H40 M12 40 V18 L24 10 L36 18 V40"/><path d="M20 40 V26 H28 V40"/></svg>
+        <h3>Kalite Odaklılık</h3>
+        <p>Detaylarda kusursuzluğu hedefleyen kalite anlayışımızdan ödün vermiyoruz.</p>
+      </div>
+      <div class="value reveal">
+        <span class="value-num">— 04</span>
+        <svg class="value-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 24 Q24 8 40 24 Q24 40 8 24 Z"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg>
+        <h3>Güvenirlik</h3>
+        <p>Söz verdiğimiz zamanda ve bütçede projeleri teslim etmeyi temel ilke ediniyoruz.</p>
+      </div>
+      <div class="value reveal reveal-delay-1">
+        <span class="value-num">— 05</span>
+        <svg class="value-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 8 L36 8 L40 14 L40 40 L8 40 L8 14 Z M8 14 H40 M16 22 L32 22 M16 30 L26 30"/></svg>
+        <h3>Esneklik</h3>
+        <p>Müşteri ihtiyaçlarına ve mekân gerekliliklerine göre hızlı ve yaratıcı çözümler üretiyoruz.</p>
+      </div>
+      <div class="value reveal reveal-delay-2">
+        <span class="value-num">— 06</span>
+        <svg class="value-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 32 L20 20 L28 28 L40 14 M30 14 H40 V24"/></svg>
+        <h3>İnovatif Çözümler</h3>
+        <p>Geleceğin mekânlarını bugünün en yeni teknolojileri ve yaklaşımlarıyla kurguluyoruz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="container">
+    <div class="section-tag reveal">Süreç</div>
+    <h2 class="section-title reveal reveal-delay-1">İlk eskizden <em>anahtar teslime.</em></h2>
+    <div class="process-list">
+      <div class="process-item reveal">
+        <div class="process-num">01</div>
+        <div class="process-name">Keşif & <em>Brief</em></div>
+        <div class="process-desc">İhtiyaçları, beklentileri ve mekânın bağlamını anlamak için derin bir başlangıç görüşmesi yapıyoruz.</div>
+      </div>
+      <div class="process-item reveal reveal-delay-1">
+        <div class="process-num">02</div>
+        <div class="process-name"><em>Konsept</em> & Bütçe</div>
+        <div class="process-desc">Tasarım dilini, malzeme paletini ve ön bütçeyi şeffaf biçimde ortaya koyuyoruz.</div>
+      </div>
+      <div class="process-item reveal reveal-delay-2">
+        <div class="process-num">03</div>
+        <div class="process-name">Tasarım & <em>Detay</em></div>
+        <div class="process-desc">3B modelleme, mekanik-elektrik koordinasyonu ve uygulama detayları aynı dosyada birleşir.</div>
+      </div>
+      <div class="process-item reveal reveal-delay-3">
+        <div class="process-num">04</div>
+        <div class="process-name"><em>Fit-Out</em> Uygulama</div>
+        <div class="process-desc">Şantiye boyunca takvim ve kalite, kendi ekibimiz tarafından doğrudan yönetilir.</div>
+      </div>
+      <div class="process-item reveal reveal-delay-4">
+        <div class="process-num">05</div>
+        <div class="process-name">Teslim & <em>Garanti</em></div>
+        <div class="process-desc">Anahtar teslimden sonra 12 ay garanti ve teknik destek sürecine geçilir.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section class="cta-strip">
+  <div class="container">
+    <h2>Bir sonraki <em>mekânınızı</em> birlikte tasarlayalım.</h2>
+    <a href="#contact" class="cta-btn">Teklif İste →</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="section-tag reveal">İletişim</div>
+    <h2 class="section-title reveal reveal-delay-1">Bir <em>fikir</em> mi var? Konuşalım.</h2>
+    <div class="contact-grid">
+      <form class="contact-form reveal reveal-delay-2" onsubmit="event.preventDefault(); alert('Mesajınız ulaştı. En kısa sürede dönüş yapacağız.'); this.reset();">
+        <div class="field">
+          <input type="text" id="name" required />
+          <label for="name">Adınız</label>
+        </div>
+        <div class="field">
+          <input type="email" id="email" required />
+          <label for="email">E-posta</label>
+        </div>
+        <div class="field">
+          <input type="text" id="company" required />
+          <label for="company">Şirket / Marka</label>
+        </div>
+        <div class="field">
+          <input type="text" id="subject" required />
+          <label for="subject">Proje Türü (Office / Retail / Hospitality)</label>
+        </div>
+        <div class="field">
+          <textarea id="message" required></textarea>
+          <label for="message">Projeniz hakkında kısa bilgi</label>
+        </div>
+        <button type="submit" class="submit-btn">Gönder →</button>
+      </form>
+
+      <div class="contact-info reveal reveal-delay-3">
+        <h3>Atölye</h3>
+        <p>Karaköy, Kemankeş Caddesi No: 47<br/>Beyoğlu, İstanbul</p>
+
+        <h3>İletişim</h3>
+        <a href="mailto:hello@indart.co">hello@indart.co</a>
+        <a href="tel:+902121234567">+90 212 123 45 67</a>
+
+        <h3>Saatler</h3>
+        <p>Pazartesi — Cuma · 09:00 — 18:00</p>
+
+        <h3>Sosyal</h3>
+        <div class="socials">
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="Behance">Be</a>
+          <a href="#" aria-label="Pinterest">Pi</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">
+        <a href="#" class="logo-mark">
+          <svg width="160" height="30"><use href="#indart-logo"/></svg>
+        </a>
+        <div class="footer-meta">© 2026 İNDART · Design · Fit-Out · Management · Tüm Hakları Saklıdır</div>
+      </div>
+      <div class="footer-right">
+        <div class="footer-address">
+          <strong>MERKEZ OFİS:</strong> Barbaros Mah. İkizler Sok. No:18 ATAŞEHİR - İSTANBUL<br>
+          <strong>FABRİKA:</strong> Fatih Mah. Katip Çelebi Cad. No:53 ORHANLI TUZLA - İSTANBUL
+        </div>
+        <div class="footer-contact">
+          T: 0 216 315 07 67 · M: indart@indart.com.tr
+        </div>
+      </div>
+    </div>
+  </footer>
+</section>
+
+<script>
+  // Loader
+  window.addEventListener('load',()=>{
+    setTimeout(()=>document.getElementById('loader').classList.add('hidden'),1900);
+  });
+
+  // Custom Cursor
+  const cursor = document.querySelector('.cursor');
+  const ring = document.querySelector('.cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX;my=e.clientY;
+    cursor.style.left=mx+'px';cursor.style.top=my+'px';
+  });
+  function loop(){
+    rx+=(mx-rx)*.15;ry+=(my-ry)*.15;
+    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    requestAnimationFrame(loop);
+  }loop();
+  document.querySelectorAll('a,button,.pillar,.project,.value,.process-item,.filter,.clients-grid > div').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');ring.classList.add('hover');});
+    el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover');});
+  });
+
+  // Nav scroll state
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll',()=>{
+    nav.classList.toggle('scrolled', window.scrollY>60);
+  });
+
+  // Hero Video Slider
+  (function(){
+    const slides = document.querySelectorAll('.hero-slide');
+    const indicators = document.querySelectorAll('.hero-indicator');
+    let current = 0;
+
+    function setIndicatorDuration(index, duration){
+      indicators[index].style.setProperty('--indicator-duration', duration + 's');
+    }
+
+    function goToSlide(index){
+      // Deactivate current
+      slides[current].classList.remove('active');
+      indicators[current].classList.remove('active');
+      // Pause old video
+      const oldVid = slides[current].querySelector('video');
+      if(oldVid) oldVid.pause();
+
+      current = index;
+
+      // Activate new
+      slides[current].classList.add('active');
+
+      // Play new video from start
+      const newVid = slides[current].querySelector('video');
+      if(newVid){
+        newVid.currentTime = 0;
+        newVid.play().catch(()=>{});
+
+        // Set indicator duration to match video length
+        const dur = newVid.duration;
+        if(dur && isFinite(dur)){
+          setIndicatorDuration(current, dur);
+        }
+      }
+
+      // Reset indicator animation
+      indicators[current].classList.add('instant');
+      void indicators[current].offsetWidth; // force reflow
+      indicators[current].classList.remove('instant');
+      indicators[current].classList.add('active');
+    }
+
+    function nextSlide(){
+      const next = (current + 1) % slides.length;
+      goToSlide(next);
+    }
+
+    // Listen for video ended events to auto-advance
+    slides.forEach((slide) => {
+      const vid = slide.querySelector('video');
+      if(vid){
+        vid.addEventListener('ended', () => {
+          nextSlide();
+        });
+      }
+    });
+
+    // Indicator click
+    indicators.forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        if(i === current) return;
+        goToSlide(i);
+      });
+    });
+
+    // Initialize first video
+    const firstVid = slides[0].querySelector('video');
+    if(firstVid){
+      // Set indicator duration once metadata is loaded
+      function initFirst(){
+        const dur = firstVid.duration;
+        if(dur && isFinite(dur)){
+          setIndicatorDuration(0, dur);
+          // Re-trigger indicator animation with correct duration
+          indicators[0].classList.add('instant');
+          void indicators[0].offsetWidth;
+          indicators[0].classList.remove('instant');
+          indicators[0].classList.add('active');
+        }
+      }
+      if(firstVid.readyState >= 1){
+        initFirst();
+      } else {
+        firstVid.addEventListener('loadedmetadata', initFirst);
+      }
+      firstVid.play().catch(()=>{});
+    }
+  })();
+
+  // Hero parallax on scroll
+  window.addEventListener('scroll',()=>{
+    const y = window.scrollY;
+    const slider = document.getElementById('heroSlider');
+    if(y<800 && slider) slider.style.transform = `translateY(${y*.3}px)`;
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Filter buttons
+  document.querySelectorAll('.filter').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

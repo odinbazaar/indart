@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output - Hostinger static deploy için repoda tutuluyor
+# dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Windows stray reserved-name file
+nul
+
+# Orijinal kaynak videoları (optimize edilmis versiyonlar dist/ ve koktte mevcut)
+INDART 1.mp4
+INDART 3.mp4
+INDART VILLA.mp4
