@@ -53,7 +53,7 @@
   .logo-mark{
     display:inline-flex;align-items:center;
   }
-  .logo-mark img{height:32px;width:auto;display:block;}
+  .logo-mark img{height:44px;width:auto;display:block;transition:height .4s ease;}
   .footer-left .logo-mark img{height:40px;}
   .loader-logo img{height:48px;display:block;margin:0 auto;}
 
@@ -84,6 +84,7 @@
     border-bottom:1px solid var(--grey-line);
   }
   nav.scrolled .logo-mark{color:var(--ink);}
+  nav.scrolled .logo-mark img{height:34px;}
   .nav-links{display:flex;gap:40px;list-style:none;align-items:center;}
   .nav-links a{
     color:var(--cream);text-decoration:none;
@@ -105,6 +106,8 @@
   .menu-toggle{display:none;background:none;border:none;cursor:none;color:inherit;}
   @media (max-width:900px){
     nav{padding:18px 24px;}
+    .logo-mark img{height:34px;}
+    nav.scrolled .logo-mark img{height:28px;}
     .nav-links,.nav-cta{display:none;}
     .menu-toggle{display:block;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--cream);}
     nav.scrolled .menu-toggle{color:var(--ink);}
@@ -189,8 +192,8 @@
 
   h1.hero-title{
     font-family:var(--display);font-weight:300;
-    font-size:clamp(48px,8vw,128px);
-    line-height:.98;letter-spacing:-.02em;
+    font-size:clamp(40px,5.5vw,90px);
+    line-height:1.06;letter-spacing:-.02em;
     margin-bottom:32px;max-width:14ch;
   }
   h1.hero-title .line{display:block;overflow:hidden;}
@@ -497,71 +500,71 @@
   <div class="hero-slider" id="heroSlider">
     <div class="hero-slide active">
       <video muted autoplay playsinline>
-        <source src="hero-video-1-opt.webm" type="video/webm">
-        <source src="hero-video-1-opt.mp4" type="video/mp4">
+        <source src="/hero-video-1-opt.webm" type="video/webm">
+        <source src="/hero-video-1-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-2-opt.webm" type="video/webm">
-        <source src="hero-video-2-opt.mp4" type="video/mp4">
+        <source src="/hero-video-2-opt.webm" type="video/webm">
+        <source src="/hero-video-2-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-3-opt.webm" type="video/webm">
-        <source src="hero-video-3-opt.mp4" type="video/mp4">
+        <source src="/hero-video-3-opt.webm" type="video/webm">
+        <source src="/hero-video-3-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-4-opt.webm" type="video/webm">
-        <source src="hero-video-4-opt.mp4" type="video/mp4">
+        <source src="/hero-video-4-opt.webm" type="video/webm">
+        <source src="/hero-video-4-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-5-opt.webm" type="video/webm">
-        <source src="hero-video-5-opt.mp4" type="video/mp4">
+        <source src="/hero-video-5-opt.webm" type="video/webm">
+        <source src="/hero-video-5-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-6-opt.webm" type="video/webm">
-        <source src="hero-video-6-opt.mp4" type="video/mp4">
+        <source src="/hero-video-6-opt.webm" type="video/webm">
+        <source src="/hero-video-6-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-7-opt.webm" type="video/webm">
-        <source src="hero-video-7-opt.mp4" type="video/mp4">
+        <source src="/hero-video-7-opt.webm" type="video/webm">
+        <source src="/hero-video-7-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-8-opt.webm" type="video/webm">
-        <source src="hero-video-8-opt.mp4" type="video/mp4">
+        <source src="/hero-video-8-opt.webm" type="video/webm">
+        <source src="/hero-video-8-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-9-opt.webm" type="video/webm">
-        <source src="hero-video-9-opt.mp4" type="video/mp4">
+        <source src="/hero-video-9-opt.webm" type="video/webm">
+        <source src="/hero-video-9-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>
     <div class="hero-slide">
       <video muted playsinline>
-        <source src="hero-video-10-opt.webm" type="video/webm">
-        <source src="hero-video-10-opt.mp4" type="video/mp4">
+        <source src="/hero-video-10-opt.webm" type="video/webm">
+        <source src="/hero-video-10-opt.mp4" type="video/mp4">
       </video>
       <div class="hero-slide-overlay"></div>
     </div>

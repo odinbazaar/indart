@@ -12,16 +12,16 @@ const defaultSiteData = {
       { num: "10.000+", label: "m² Üretim Alanı" }
     ],
     videos: [
-      { webm: "hero-video-1-opt.webm", mp4: "hero-video-1-opt.mp4" },
-      { webm: "hero-video-2-opt.webm", mp4: "hero-video-2-opt.mp4" },
-      { webm: "hero-video-3-opt.webm", mp4: "hero-video-3-opt.mp4" },
-      { webm: "hero-video-4-opt.webm", mp4: "hero-video-4-opt.mp4" },
-      { webm: "hero-video-5-opt.webm", mp4: "hero-video-5-opt.mp4" },
-      { webm: "hero-video-6-opt.webm", mp4: "hero-video-6-opt.mp4" },
-      { webm: "hero-video-7-opt.webm", mp4: "hero-video-7-opt.mp4" },
-      { webm: "hero-video-8-opt.webm", mp4: "hero-video-8-opt.mp4" },
-      { webm: "hero-video-9-opt.webm", mp4: "hero-video-9-opt.mp4" },
-      { webm: "hero-video-10-opt.webm", mp4: "hero-video-10-opt.mp4" }
+      { webm: "/hero-video-1-opt.webm", mp4: "/hero-video-1-opt.mp4" },
+      { webm: "/hero-video-2-opt.webm", mp4: "/hero-video-2-opt.mp4" },
+      { webm: "/hero-video-3-opt.webm", mp4: "/hero-video-3-opt.mp4" },
+      { webm: "/hero-video-4-opt.webm", mp4: "/hero-video-4-opt.mp4" },
+      { webm: "/hero-video-5-opt.webm", mp4: "/hero-video-5-opt.mp4" },
+      { webm: "/hero-video-6-opt.webm", mp4: "/hero-video-6-opt.mp4" },
+      { webm: "/hero-video-7-opt.webm", mp4: "/hero-video-7-opt.mp4" },
+      { webm: "/hero-video-8-opt.webm", mp4: "/hero-video-8-opt.mp4" },
+      { webm: "/hero-video-9-opt.webm", mp4: "/hero-video-9-opt.mp4" },
+      { webm: "/hero-video-10-opt.webm", mp4: "/hero-video-10-opt.mp4" }
     ]
   },
   about: {
