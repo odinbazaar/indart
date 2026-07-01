@@ -1,4 +1,5 @@
 const defaultSiteData = {
+  version: 2,
   hero: {
     eyebrow: "Design · Fit-Out · Management",
     titleLine1: "Kurumsal mekânları",
@@ -12,9 +13,10 @@ const defaultSiteData = {
       { num: "10.000+", label: "m² Üretim Alanı" }
     ],
     videos: [
+      { webm: "/hero-video-indart1-opt.webm", mp4: "/hero-video-indart1-opt.mp4" },
+      { webm: "/hero-video-indartvilla-opt.webm", mp4: "/hero-video-indartvilla-opt.mp4" },
+      { webm: "/hero-video-indart3-opt.webm", mp4: "/hero-video-indart3-opt.mp4" },
       { webm: "/hero-video-1-opt.webm", mp4: "/hero-video-1-opt.mp4" },
-      { webm: "/hero-video-2-opt.webm", mp4: "/hero-video-2-opt.mp4" },
-      { webm: "/hero-video-3-opt.webm", mp4: "/hero-video-3-opt.mp4" },
       { webm: "/hero-video-4-opt.webm", mp4: "/hero-video-4-opt.mp4" },
       { webm: "/hero-video-5-opt.webm", mp4: "/hero-video-5-opt.mp4" },
       { webm: "/hero-video-6-opt.webm", mp4: "/hero-video-6-opt.mp4" },
@@ -189,7 +191,7 @@ function renderHero(data) {
   if(sliderEl) {
     sliderEl.innerHTML = data.hero.videos.map((vid, idx) => `
       <div class="hero-slide ${idx === 0 ? 'active' : ''}">
-        <video muted ${idx === 0 ? 'autoplay' : ''} playsinline loop>
+        <video muted ${idx === 0 ? 'autoplay' : ''} playsinline>
           <source src="${vid.webm}" type="video/webm">
           <source src="${vid.mp4}" type="video/mp4">
         </video>
@@ -403,7 +405,17 @@ function renderContact(data) {
 
 function applySiteData() {
   const saved = localStorage.getItem('indart_site_data');
-  const data = saved ? JSON.parse(saved) : defaultSiteData;
+  let data = defaultSiteData;
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed.version === defaultSiteData.version) {
+        data = parsed;
+      } else {
+        localStorage.removeItem('indart_site_data');
+      }
+    } catch(e) {}
+  }
   
   renderHero(data);
   renderAbout(data);
