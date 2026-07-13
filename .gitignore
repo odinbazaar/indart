@@ -32,3 +32,6 @@ _private-belgeler/
 
 # Bos / bozuk WhatsApp indirmesi
 WhatsApp Unknown *.zip
+
+# Deploy yukleme paketi (dist icerigi)
+indart-deploy.zip
