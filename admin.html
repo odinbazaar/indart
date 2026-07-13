@@ -252,6 +252,7 @@
       <button class="tab-btn" onclick="switchTab('aboutTab', this)">Hakkımızda Bölümü</button>
       <button class="tab-btn" onclick="switchTab('servicesTab', this)">Hizmetlerimiz (3 Sütun)</button>
       <button class="tab-btn" onclick="switchTab('projectsTab', this)">Projelerimiz (Portföy)</button>
+      <button class="tab-btn" onclick="switchTab('certsTab', this)">İş Bitirme Belgeleri</button>
       <button class="tab-btn" onclick="switchTab('valuesTab', this)">Değerlerimiz (6 İlke)</button>
       <button class="tab-btn" onclick="switchTab('processTab', this)">Sürecimiz</button>
       <button class="tab-btn" onclick="switchTab('contactTab', this)">İletişim & Alt Bilgi</button>
@@ -408,6 +409,42 @@
         </div>
       </div>
 
+      <!-- 4.5 İş Bitirme Belgeleri Tab -->
+      <div id="certsTab" class="tab-content">
+        <div class="section-title-panel">
+          İş Bitirme Belgeleri
+          <div style="display:flex; gap:12px;">
+            <button class="btn-outline" onclick="openAddCertModal()" style="font-size:11px;">Yeni Belge Ekle</button>
+            <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Genel Bilgiler</div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Bölüm Etiketi</label>
+              <input type="text" id="certs_tag">
+            </div>
+            <div class="form-group">
+              <label>Başlık (Vurgu için &lt;em&gt;kelime&lt;/em&gt;)</label>
+              <input type="text" id="certs_title">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Giriş Cümlesi (Lead)</label>
+            <input type="text" id="certs_lead">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Belge Listesi</div>
+          <div id="admin_certs_list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
       <!-- 5. Values Tab -->
       <div id="valuesTab" class="tab-content">
         <div class="section-title-panel">Değerlerimiz <button class="btn" onclick="saveData()" style="width:auto; margin-top:0;">Kaydet</button></div>
@@ -542,6 +579,7 @@
           <option value="Office">Office</option>
           <option value="Retail">Retail</option>
           <option value="Hospitality">Hospitality</option>
+          <option value="Villa">Villa</option>
           <option value="F&B">F&B</option>
         </select>
       </div>
@@ -552,17 +590,72 @@
     </div>
     
     <div class="form-group">
-      <label>Proje Görseli</label>
+      <label>Kapak Görseli</label>
       <input type="text" id="modal_project_image" placeholder="Görsel URL veya Yükle">
       <div class="media-preview-container">
         <input type="file" accept="image/*" onchange="uploadFile(this, 'modal_project_image', 'modal_proj_preview')">
         <img id="modal_proj_preview" class="media-preview" src="" alt="Önizleme">
       </div>
     </div>
-    
+
+    <div class="form-group">
+      <label>Galeri Fotoğrafları (her satıra bir görsel yolu — boş bırakılırsa sadece kapak gösterilir)</label>
+      <textarea id="modal_project_gallery" rows="6" placeholder="/villa/villa-45.webp&#10;/villa/villa-46.webp&#10;..."></textarea>
+      <div style="font-size:11px; opacity:.6; margin-top:6px;">Sitede kart tıklanınca bu fotoğraflar lightbox galerisinde sırayla gösterilir.</div>
+    </div>
+
     <div class="grid-2" style="margin-top:20px;">
       <button class="btn-outline" onclick="closeProjectModal()">İptal</button>
       <button class="btn" onclick="saveProjectFromModal()" style="margin-top:0;">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- Certificate Edit/Add Modal Overlay -->
+<div id="certModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+  <div class="card" style="width:100%; max-width:600px; padding:40px; border-color:var(--gold);">
+    <h3 class="section-title-panel" id="certModalTitle" style="margin-bottom:20px; font-size:24px;">Belge Düzenle</h3>
+
+    <input type="hidden" id="modal_cert_index">
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label>İşveren / Müşteri</label>
+        <input type="text" id="modal_cert_client" placeholder="Örn: Arkas Holding A.Ş.">
+      </div>
+      <div class="form-group">
+        <label>Belge Tipi</label>
+        <select id="modal_cert_type">
+          <option value="Kesin Kabul Tutanağı">Kesin Kabul Tutanağı</option>
+          <option value="Geçici Kabul Tutanağı">Geçici Kabul Tutanağı</option>
+          <option value="İş Bitirme Belgesi">İş Bitirme Belgesi</option>
+          <option value="Referans Mektubu">Referans Mektubu</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>İş Kapsamı (Açıklama)</label>
+      <textarea id="modal_cert_scope" rows="2" placeholder="Örn: Ofis katları — dekoratif asma tavan ve duvar işleri."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Konum & Yıl (Meta)</label>
+      <input type="text" id="modal_cert_meta" placeholder="Örn: İzmir · 2017">
+    </div>
+
+    <div class="form-group">
+      <label>Belge Görseli (Tarama)</label>
+      <input type="text" id="modal_cert_image" placeholder="Görsel URL veya Yükle">
+      <div class="media-preview-container">
+        <input type="file" accept="image/*" onchange="uploadFile(this, 'modal_cert_image', 'modal_cert_preview')">
+        <img id="modal_cert_preview" class="media-preview" src="" alt="Önizleme">
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px;">
+      <button class="btn-outline" onclick="closeCertModal()">İptal</button>
+      <button class="btn" onclick="saveCertFromModal()" style="margin-top:0;">Kaydet</button>
     </div>
   </div>
 </div>

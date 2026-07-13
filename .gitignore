@@ -26,3 +26,9 @@ nul
 INDART 1.mp4
 INDART 3.mp4
 INDART VILLA.mp4
+
+# Ozel belge tarama yedekleri (yayindaki kopya public/belgeler/ altinda)
+_private-belgeler/
+
+# Bos / bozuk WhatsApp indirmesi
+WhatsApp Unknown *.zip

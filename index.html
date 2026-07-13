@@ -310,7 +310,7 @@
   .filter:hover{border-color:var(--green);color:var(--green);}
   .filter.active{background:var(--green);color:var(--cream);border-color:var(--green);}
 
-  .projects-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:160px;gap:16px;}
+  .projects-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:160px;gap:16px;grid-auto-flow:dense;}
   .project{position:relative;overflow:hidden;background:var(--ink);cursor:none;}
   .project img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.8,.2,1), filter .6s;filter:saturate(.85);}
   .project:hover img{transform:scale(1.08);filter:saturate(1.1);}
@@ -320,18 +320,72 @@
   .project-title{font-family:var(--display);font-size:28px;font-weight:400;line-height:1.1;}
   .project-meta{font-size:12px;opacity:.7;margin-top:4px;letter-spacing:.05em;}
 
-  .project:nth-child(1){grid-column:span 7;grid-row:span 3;}
-  .project:nth-child(2){grid-column:span 5;grid-row:span 2;}
-  .project:nth-child(3){grid-column:span 5;grid-row:span 3;}
-  .project:nth-child(4){grid-column:span 4;grid-row:span 2;}
-  .project:nth-child(5){grid-column:span 8;grid-row:span 2;}
-  .project:nth-child(6){grid-column:span 4;grid-row:span 3;}
-  .project:nth-child(7){grid-column:span 5;grid-row:span 2;}
-  .project:nth-child(8){grid-column:span 7;grid-row:span 2;}
+  .project:nth-child(8n+1){grid-column:span 7;grid-row:span 3;}
+  .project:nth-child(8n+2){grid-column:span 5;grid-row:span 2;}
+  .project:nth-child(8n+3){grid-column:span 5;grid-row:span 3;}
+  .project:nth-child(8n+4){grid-column:span 4;grid-row:span 2;}
+  .project:nth-child(8n+5){grid-column:span 8;grid-row:span 2;}
+  .project:nth-child(8n+6){grid-column:span 4;grid-row:span 3;}
+  .project:nth-child(8n+7){grid-column:span 5;grid-row:span 2;}
+  .project:nth-child(8n+8){grid-column:span 7;grid-row:span 2;}
+  .project.filtered-hidden{display:none!important;}
+
+  .project-badge{position:absolute;top:16px;right:16px;z-index:2;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--cream);background:rgba(10,15,12,.5);border:1px solid rgba(245,241,232,.3);padding:7px 14px;border-radius:100px;backdrop-filter:blur(8px);pointer-events:none;}
 
   @media (max-width:900px){
     .projects-grid{grid-template-columns:1fr;grid-auto-rows:300px;}
     .project{grid-column:span 1!important;grid-row:span 1!important;}
+  }
+
+  /* IS BITIRME BELGELERI */
+  .certificates{background:var(--cream);padding:120px 48px;border-top:1px solid var(--grey-line);}
+  .certificates .container{max-width:1400px;margin:0 auto;}
+  .certs-header{max-width:720px;margin-bottom:64px;}
+  .certs-header .section-title{font-family:var(--display);font-size:clamp(36px,5vw,64px);font-weight:400;line-height:1.05;margin-top:14px;}
+  .certs-header .section-title em{font-style:italic;color:var(--green);}
+  .certs-lead{margin-top:20px;font-size:16px;line-height:1.6;color:var(--ink-soft);max-width:560px;}
+  .certs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
+  .cert{margin:0;cursor:none;outline:none;}
+  .cert-doc{position:relative;aspect-ratio:1/1.24;background:#fff;border:1px solid var(--grey-line);overflow:hidden;box-shadow:0 1px 2px rgba(10,15,12,.04);transition:box-shadow .5s, transform .5s, border-color .5s;}
+  .cert:hover .cert-doc,.cert:focus-visible .cert-doc{box-shadow:0 24px 60px rgba(0,60,35,.16);transform:translateY(-4px);border-color:var(--green);}
+  .cert-doc img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform 1s cubic-bezier(.2,.8,.2,1);}
+  .cert:hover .cert-doc img,.cert:focus-visible .cert-doc img{transform:scale(1.03);}
+  .cert-view{position:absolute;left:0;right:0;bottom:0;padding:16px;text-align:center;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);background:linear-gradient(180deg,transparent,rgba(0,60,35,.92));opacity:0;transform:translateY(8px);transition:opacity .4s, transform .4s;}
+  .cert:hover .cert-view,.cert:focus-visible .cert-view{opacity:1;transform:translateY(0);}
+  .cert-cap{padding:24px 4px 0;}
+  .cert-type{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+  .cert-client{font-family:var(--display);font-size:24px;font-weight:400;line-height:1.15;color:var(--ink);}
+  .cert-scope{font-size:13px;line-height:1.55;color:var(--ink-soft);margin-top:10px;}
+  .cert-meta{font-size:12px;letter-spacing:.05em;color:var(--grey);margin-top:12px;padding-top:12px;border-top:1px solid var(--grey-line);}
+  @media (max-width:900px){
+    .certificates{padding:80px 24px;}
+    .certs-grid{grid-template-columns:1fr;gap:40px;max-width:420px;margin:0 auto;}
+  }
+
+  /* PROJECT GALLERY LIGHTBOX */
+  .lightbox{position:fixed;inset:0;z-index:5000;background:rgba(7,13,10,.97);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .4s ease;}
+  .lightbox.open{opacity:1;pointer-events:auto;}
+  .lightbox-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:28px 48px;border-bottom:1px solid rgba(245,241,232,.12);}
+  .lightbox-tag{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+  .lightbox-title{font-family:var(--display);font-size:30px;font-weight:400;color:var(--cream);line-height:1.1;}
+  .lightbox-close{font-family:var(--body);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cream);background:transparent;border:1px solid rgba(245,241,232,.3);border-radius:100px;padding:10px 20px;cursor:none;transition:all .3s;white-space:nowrap;}
+  .lightbox-close:hover{border-color:var(--gold);color:var(--gold);}
+  .lightbox-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;padding:32px 110px;}
+  .lightbox-stage img{max-width:100%;max-height:100%;object-fit:contain;}
+  .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;background:transparent;border:1px solid rgba(245,241,232,.3);color:var(--cream);font-size:18px;font-family:var(--body);cursor:none;transition:all .3s;}
+  .lightbox-nav:hover{border-color:var(--gold);color:var(--gold);}
+  .lightbox-prev{left:32px;}
+  .lightbox-next{right:32px;}
+  .lightbox-bottom{display:flex;justify-content:center;padding:20px 48px;border-top:1px solid rgba(245,241,232,.12);}
+  .lightbox-counter{font-family:var(--display);font-style:italic;font-size:16px;color:var(--cream);opacity:.75;letter-spacing:.08em;}
+  @media (max-width:700px){
+    .lightbox-top{padding:18px 20px;}
+    .lightbox-title{font-size:20px;}
+    .lightbox-stage{padding:12px 52px;}
+    .lightbox-nav{width:40px;height:40px;font-size:15px;}
+    .lightbox-prev{left:8px;}
+    .lightbox-next{right:8px;}
+    .lightbox-bottom{padding:14px 20px;}
   }
 
   /* CLIENTS */
@@ -424,16 +478,6 @@
   .submit-btn{align-self:flex-start;background:var(--gold);color:var(--ink);border:none;padding:18px 40px;font-family:var(--body);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;cursor:none;transition:all .4s;margin-top:16px;border-radius:100px;}
   .submit-btn:hover{background:var(--cream);transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,168,106,.25);}
 
-          <h3>Merkez Ofis</h3>
-          <p>Barbaros Mah. İkizler Sok. No:18<br/>ATAŞEHİR — İSTANBUL</p>
-          
-          <h3>Fabrika</h3>
-          <p>Fatih Mah. Katip Çelebi Cad. No:53<br/>ORHANLI TUZLA — İSTANBUL</p>
-          
-          <h3>İletişim</h3>
-          <a href="tel:+902163150767">0 216 315 07 67</a>
-          <a href="mailto:indart@indart.com.tr">indart@indart.com.tr</a>
-
   .socials{display:flex;gap:16px;margin-top:24px;}
   .socials a{width:44px;height:44px;border:1px solid rgba(245,241,232,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:13px;font-family:var(--body);font-weight:500;letter-spacing:0;transition:all .3s;}
   .socials a:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);}
@@ -444,6 +488,9 @@
   .footer-content .logo-mark{color:var(--cream);}
   .footer-content .logo-mark svg{height:36px;}
   .footer-meta{font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.5;}
+  .footer-admin{max-width:1400px;margin:32px auto 0;padding-top:24px;border-top:1px solid rgba(245,241,232,.1);text-align:center;}
+  .footer-admin-link{color:var(--gold);font-size:11px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;opacity:.7;transition:opacity .3s, letter-spacing .3s;}
+  .footer-admin-link:hover{opacity:1;letter-spacing:.3em;}
 
   /* Reveal */
   .reveal{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1);}
@@ -488,6 +535,7 @@
     <li><a href="#about">Hakkımızda</a></li>
     <li><a href="#services">Hizmetler</a></li>
     <li><a href="#projects">Projeler</a></li>
+    <li><a href="#certificates">İş Bitirme</a></li>
     <li><a href="#values">Değerler</a></li>
   </ul>
   <a href="#contact" class="nav-cta">Teklif Al</a>
@@ -594,7 +642,7 @@
 
   <div class="hero-grain"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">Design · Fit-Out · Management</div>
+    <div class="hero-eyebrow">DESIGN · FIT-OUT · MANAGEMENT</div>
     <h1 class="hero-title">
       <span class="line"><span>Kurumsal mekânları</span></span>
       <span class="line"><span>uçtan uca</span></span>
@@ -618,12 +666,12 @@
 <!-- MARQUEE -->
 <div class="marquee">
   <div class="marquee-track">
-    <span>Office Fit-Out</span>
+    <span>OFFICE FIT-OUT</span>
     <span>Retail Design</span>
     <span>Hospitality</span>
     <span>Project Management</span>
     <span>Turn-Key Delivery</span>
-    <span>Office Fit-Out</span>
+    <span>OFFICE FIT-OUT</span>
     <span>Retail Design</span>
     <span>Hospitality</span>
     <span>Project Management</span>
@@ -741,77 +789,111 @@
       <div class="filters reveal reveal-delay-2">
         <button class="filter active">Tümü</button>
         <button class="filter">Office</button>
-        <button class="filter">Retail</button>
-        <button class="filter">Hospitality</button>
+        <button class="filter">RETAIL</button>
+        <button class="filter">HOSPITALITY</button>
+        <button class="filter">VILLA</button>
         <button class="filter">F&B</button>
       </div>
     </div>
 
+    <!-- Kartlar siteData.js tarafindan render edilir; asagisi statik fallback -->
     <div class="projects-grid">
-      <div class="project reveal">
-        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=85" alt="Arkas Holding" />
+      <div class="project reveal" data-project-index="0">
+        <img src="/villa/villa-51.webp" loading="lazy" alt="UNI TANKERS İstanbul Ofisi" />
+        <div class="project-badge">21 Fotoğraf</div>
         <div class="project-overlay">
-          <div class="project-cat">Office Fit-Out</div>
+          <div class="project-cat">Office</div>
+          <div class="project-title">UNI TANKERS İstanbul Ofisi</div>
+          <div class="project-meta">İstanbul, Türkiye</div>
+        </div>
+      </div>
+      <div class="project reveal reveal-delay-1" data-project-index="1">
+        <img src="/villa/villa-2.webp" loading="lazy" alt="Özel Villa Projesi" />
+        <div class="project-badge">40 Fotoğraf</div>
+        <div class="project-overlay">
+          <div class="project-cat">Villa</div>
+          <div class="project-title">Özel Villa Projesi</div>
+          <div class="project-meta">Türkiye</div>
+        </div>
+      </div>
+      <div class="project reveal reveal-delay-2" data-project-index="2">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=85" loading="lazy" alt="Arkas Holding" />
+        <div class="project-overlay">
+          <div class="project-cat">Office</div>
           <div class="project-title">Arkas Holding</div>
           <div class="project-meta">Marmaris, Türkiye</div>
         </div>
       </div>
-      <div class="project reveal reveal-delay-1">
-        <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=1200&q=85" alt="Radisson Blu" />
+      <div class="project reveal" data-project-index="3">
+        <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=1200&q=85" loading="lazy" alt="Radisson Blu" />
         <div class="project-overlay">
-          <div class="project-cat">Hotel</div>
+          <div class="project-cat">Hospitality</div>
           <div class="project-title">Radisson Blu</div>
           <div class="project-meta">İstanbul, Türkiye</div>
         </div>
       </div>
-      <div class="project reveal reveal-delay-2">
-        <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&q=85" alt="Smolenskaya FS Studio" />
+      <div class="project reveal reveal-delay-1" data-project-index="4">
+        <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&q=85" loading="lazy" alt="Smolenskaya FS Studio" />
         <div class="project-overlay">
           <div class="project-cat">Retail</div>
           <div class="project-title">Smolenskaya FS Studio</div>
           <div class="project-meta">Moskova, Rusya</div>
         </div>
       </div>
-      <div class="project reveal">
-        <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=1200&q=85" alt="Rixoss Hotel" />
+      <div class="project reveal reveal-delay-2" data-project-index="5">
+        <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=1200&q=85" loading="lazy" alt="Rixoss Hotel" />
         <div class="project-overlay">
-          <div class="project-cat">Hotel</div>
+          <div class="project-cat">Hospitality</div>
           <div class="project-title">Rixoss Hotel</div>
           <div class="project-meta">Bodrum, Türkiye</div>
         </div>
       </div>
-      <div class="project reveal reveal-delay-1">
-        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1400&q=85" alt="Antwerp Fletcher Hotel" />
+      <div class="project reveal" data-project-index="6">
+        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1400&q=85" loading="lazy" alt="Antwerp Fletcher Hotel" />
         <div class="project-overlay">
-          <div class="project-cat">Hotel</div>
+          <div class="project-cat">Hospitality</div>
           <div class="project-title">Antwerp Fletcher Hotel</div>
           <div class="project-meta">Antwerp, Belçika</div>
         </div>
       </div>
-      <div class="project reveal reveal-delay-2">
-        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1000&q=85" alt="Kefalonia Hotel" />
+      <div class="project reveal reveal-delay-1" data-project-index="7">
+        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1000&q=85" loading="lazy" alt="Kefalonia Hotel" />
         <div class="project-overlay">
-          <div class="project-cat">Hotel</div>
+          <div class="project-cat">Hospitality</div>
           <div class="project-title">Kefalonia Hotel</div>
           <div class="project-meta">Yunanistan</div>
         </div>
       </div>
-      <div class="project reveal">
-        <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200&q=85" alt="Divan Hotel" />
+      <div class="project reveal reveal-delay-2" data-project-index="8">
+        <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200&q=85" loading="lazy" alt="Divan Hotel" />
         <div class="project-overlay">
-          <div class="project-cat">Hotel</div>
+          <div class="project-cat">Hospitality</div>
           <div class="project-title">Divan Hotel</div>
           <div class="project-meta">İstanbul, Türkiye</div>
         </div>
       </div>
-      <div class="project reveal reveal-delay-1">
-        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&q=85" alt="DeFacto" />
+      <div class="project reveal" data-project-index="9">
+        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&q=85" loading="lazy" alt="DeFacto" />
         <div class="project-overlay">
           <div class="project-cat">Retail</div>
           <div class="project-title">DeFacto</div>
           <div class="project-meta">Global Mağazalar</div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- IS BITIRME BELGELERI -->
+<section class="certificates" id="certificates">
+  <div class="container">
+    <div class="certs-header">
+      <div class="section-tag reveal">Tescilli Referanslar</div>
+      <h2 class="section-title reveal reveal-delay-1">İş Bitirme <em>Belgeleri</em></h2>
+      <p class="certs-lead reveal reveal-delay-2">Tamamladığımız işler, işverenlerce imzalı kesin kabul tutanaklarıyla belgelidir.</p>
+    </div>
+    <div class="certs-grid">
+      <!-- Kartlar siteData.js tarafindan render edilir -->
     </div>
   </div>
 </section>
@@ -941,7 +1023,7 @@
         </div>
         <div class="field">
           <input type="text" id="subject" required />
-          <label for="subject">Proje Türü (Office / Retail / Hospitality)</label>
+          <label for="subject">Proje Türü (OFFICE / RETAIL / HOSPITALITY)</label>
         </div>
         <div class="field">
           <textarea id="message" required></textarea>
@@ -977,7 +1059,7 @@
         <a href="#" class="logo-mark">
           <img src="logo-transparent.png" alt="INDART">
         </a>
-        <div class="footer-meta">© 2026 İNDART · Design · Fit-Out · Management · Tüm Hakları Saklıdır · <a href="admin.html" style="color: inherit; text-decoration: none; opacity: 0.6; transition: opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">Yönetim</a></div>
+        <div class="footer-meta">© 2026 İNDART · Design · Fit-Out · Management · Tüm Hakları Saklıdır</div>
       </div>
       <div class="footer-right">
         <div class="footer-address">
@@ -989,8 +1071,30 @@
         </div>
       </div>
     </div>
+    <div class="footer-admin">
+      <a href="admin.html" class="footer-admin-link">Yönetim Paneli Girişi →</a>
+    </div>
   </footer>
 </section>
+<!-- PROJECT GALLERY LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Proje galerisi">
+  <div class="lightbox-top">
+    <div>
+      <div class="lightbox-tag">Proje Galerisi</div>
+      <div class="lightbox-title" id="lightboxTitle"></div>
+    </div>
+    <button class="lightbox-close" id="lightboxClose" aria-label="Galeriyi kapat">Kapat</button>
+  </div>
+  <div class="lightbox-stage">
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Önceki fotoğraf">←</button>
+    <img id="lightboxImage" src="" alt="Proje fotoğrafı" />
+    <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Sonraki fotoğraf">→</button>
+  </div>
+  <div class="lightbox-bottom">
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+  </div>
+</div>
+
 <script type="module" src="siteData.js"></script>
 <script type="module">
   // Loader
@@ -1130,6 +1234,28 @@
     b.addEventListener('click',()=>{
       document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
       b.classList.add('active');
+      
+      const filterValue = b.textContent.trim().toUpperCase();
+      const isAll = (b === document.querySelector('.filter'));
+      const projects = document.querySelectorAll('.project');
+      
+      projects.forEach(p => {
+        if (isAll) {
+          p.classList.remove('filtered-hidden');
+          p.classList.add('visible');
+        } else {
+          const catEl = p.querySelector('.project-cat');
+          if (catEl) {
+            const cat = catEl.textContent.trim().toUpperCase();
+            if (cat.includes(filterValue)) {
+              p.classList.remove('filtered-hidden');
+              p.classList.add('visible');
+            } else {
+              p.classList.add('filtered-hidden');
+            }
+          }
+        }
+      });
     });
   });
 </script>

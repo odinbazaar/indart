@@ -1,5 +1,5 @@
 const defaultSiteData = {
-  version: 2,
+  version: 4,
   hero: {
     eyebrow: "Design · Fit-Out · Management",
     titleLine1: "Kurumsal mekânları",
@@ -82,6 +82,38 @@ const defaultSiteData = {
   },
   projects: [
     {
+      title: "UNI TANKERS İstanbul Ofisi",
+      cat: "Office",
+      meta: "İstanbul, Türkiye",
+      image: "/villa/villa-51.webp",
+      gallery: [
+        "/villa/villa-45.webp", "/villa/villa-46.webp", "/villa/villa-47.webp", "/villa/villa-48.webp",
+        "/villa/villa-49.webp", "/villa/villa-50.webp", "/villa/villa-51.webp", "/villa/villa-52.webp",
+        "/villa/villa-53.webp", "/villa/villa-54.webp", "/villa/villa-55.webp", "/villa/villa-56.webp",
+        "/villa/villa-57.webp", "/villa/villa-58.webp", "/villa/villa-59.webp", "/villa/villa-60.webp",
+        "/villa/villa-61.webp", "/villa/villa-62.webp", "/villa/villa-63.webp", "/villa/villa-64.webp",
+        "/villa/villa-65.webp"
+      ]
+    },
+    {
+      title: "Özel Villa Projesi",
+      cat: "Villa",
+      meta: "Türkiye",
+      image: "/villa/villa-2.webp",
+      gallery: [
+        "/villa/villa-2.webp", "/villa/villa-3.webp", "/villa/villa-4.webp", "/villa/villa-5.webp",
+        "/villa/villa-6.webp", "/villa/villa-7.webp", "/villa/villa-8.webp", "/villa/villa-9.webp",
+        "/villa/villa-10.webp", "/villa/villa-11.webp", "/villa/villa-12.webp", "/villa/villa-13.webp",
+        "/villa/villa-14.webp", "/villa/villa-15.webp", "/villa/villa-16.webp", "/villa/villa-17.webp",
+        "/villa/villa-18.webp", "/villa/villa-19.webp", "/villa/villa-20.webp", "/villa/villa-21.webp",
+        "/villa/villa-22.webp", "/villa/villa-23.webp", "/villa/villa-24.webp", "/villa/villa-25.webp",
+        "/villa/villa-26.webp", "/villa/villa-27.webp", "/villa/villa-28.webp", "/villa/villa-29.webp",
+        "/villa/villa-30.webp", "/villa/villa-31.webp", "/villa/villa-32.webp", "/villa/villa-33.webp",
+        "/villa/villa-34.webp", "/villa/villa-35.webp", "/villa/villa-36.webp", "/villa/villa-37.webp",
+        "/villa/villa-38.webp", "/villa/villa-39.webp", "/villa/villa-40.webp", "/villa/villa-41.webp"
+      ]
+    },
+    {
       title: "Arkas Holding",
       cat: "Office",
       meta: "Marmaris, Türkiye",
@@ -130,6 +162,34 @@ const defaultSiteData = {
       image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&q=85"
     }
   ],
+  certificates: {
+    tag: "Tescilli Referanslar",
+    title: "İş Bitirme <em>Belgeleri</em>",
+    lead: "Tamamladığımız işler, işverenlerce imzalı kesin kabul tutanaklarıyla belgelidir.",
+    list: [
+      {
+        client: "Oto İsmail Otomotiv",
+        type: "Kesin Kabul Tutanağı",
+        scope: "Oto İsmail Plaza yönetim & idari ofis katları — elektrik-mekanik ve ince işçilik, anahtar teslim.",
+        meta: "Ataşehir, İstanbul · 2018",
+        image: "/belgeler/kabul-otoismail.webp"
+      },
+      {
+        client: "Arkas Holding A.Ş.",
+        type: "Geçici Kabul Tutanağı",
+        scope: "Mistral Binası Arkas Holding katları — dekoratif asma tavan ve duvar işleri.",
+        meta: "İzmir · 2017",
+        image: "/belgeler/kabul-arkas.webp"
+      },
+      {
+        client: "Clever Polimer ve Yapı Kimyasalları A.Ş.",
+        type: "Kesin Kabul Tutanağı",
+        scope: "Fabrika idari binası & fabrika içi yönetim ofisleri — ince işler dekorasyonu, anahtar teslim.",
+        meta: "Gebze, Kocaeli · 2016",
+        image: "/belgeler/kabul-clever.webp"
+      }
+    ]
+  },
   values: {
     tag: "Değerlerimiz",
     title: "Bizi yönlendiren <em>altı ilke.</em>",
@@ -282,23 +342,15 @@ function renderServices(data) {
 function renderProjects(data) {
   const gridEl = document.querySelector('.projects-grid');
   if(gridEl) {
+    // Kart boyut ritmi CSS'teki .project:nth-child(8n+N) kurallarından gelir
     gridEl.innerHTML = data.projects.map((proj, idx) => {
       const delayClass = idx % 3 === 0 ? '' : `reveal-delay-${idx % 3}`;
-      
-      let gridSpanClass = '';
-      if(idx === 0) gridSpanClass = 'grid-column:span 7;grid-row:span 3;';
-      else if(idx === 1) gridSpanClass = 'grid-column:span 5;grid-row:span 2;';
-      else if(idx === 2) gridSpanClass = 'grid-column:span 5;grid-row:span 3;';
-      else if(idx === 3) gridSpanClass = 'grid-column:span 4;grid-row:span 2;';
-      else if(idx === 4) gridSpanClass = 'grid-column:span 8;grid-row:span 2;';
-      else if(idx === 5) gridSpanClass = 'grid-column:span 4;grid-row:span 3;';
-      else if(idx === 6) gridSpanClass = 'grid-column:span 5;grid-row:span 2;';
-      else if(idx === 7) gridSpanClass = 'grid-column:span 7;grid-row:span 2;';
-      else gridSpanClass = 'grid-column:span 4;grid-row:span 2;';
+      const galleryCount = Array.isArray(proj.gallery) ? proj.gallery.length : 0;
 
       return `
-        <div class="project reveal ${delayClass}" style="${gridSpanClass}">
-          <img src="${proj.image}" alt="${proj.title}" />
+        <div class="project reveal ${delayClass}" data-project-index="${idx}">
+          <img src="${proj.image}" loading="lazy" alt="${proj.title}" />
+          ${galleryCount > 1 ? `<div class="project-badge">${galleryCount} Fotoğraf</div>` : ''}
           <div class="project-overlay">
             <div class="project-cat">${proj.cat}</div>
             <div class="project-title">${proj.title}</div>
@@ -308,6 +360,133 @@ function renderProjects(data) {
       `;
     }).join('');
   }
+}
+
+function renderCertificates(data) {
+  if(!data.certificates) return;
+  const tagEl = document.querySelector('.certificates .section-tag');
+  if(tagEl) tagEl.textContent = data.certificates.tag;
+
+  const titleEl = document.querySelector('.certificates .section-title');
+  if(titleEl) titleEl.innerHTML = data.certificates.title;
+
+  const leadEl = document.querySelector('.certificates .certs-lead');
+  if(leadEl) leadEl.textContent = data.certificates.lead;
+
+  const gridEl = document.querySelector('.certs-grid');
+  if(gridEl) {
+    gridEl.innerHTML = data.certificates.list.map((c, idx) => {
+      const delayClass = idx % 3 === 0 ? '' : `reveal-delay-${idx % 3}`;
+      return `
+        <figure class="cert reveal ${delayClass}" data-cert-index="${idx}" tabindex="0" role="button" aria-label="${c.client} belgesini görüntüle">
+          <div class="cert-doc">
+            <img src="${c.image}" loading="lazy" alt="${c.client} — ${c.type}" />
+            <div class="cert-view">Belgeyi Gör</div>
+          </div>
+          <figcaption class="cert-cap">
+            <div class="cert-type">${c.type}</div>
+            <div class="cert-client">${c.client}</div>
+            <div class="cert-scope">${c.scope}</div>
+            <div class="cert-meta">${c.meta}</div>
+          </figcaption>
+        </figure>
+      `;
+    }).join('');
+  }
+}
+
+// ——— Lightbox (proje galerisi + belgeler) ———
+const lightboxState = { items: [], index: 0 };
+
+function openLightbox(proj) {
+  const lb = document.getElementById('lightbox');
+  if(!lb) return;
+  lightboxState.items = (Array.isArray(proj.gallery) && proj.gallery.length) ? proj.gallery : [proj.image];
+  lightboxState.index = 0;
+  const titleEl = document.getElementById('lightboxTitle');
+  if(titleEl) titleEl.textContent = proj.title;
+  showLightboxSlide(0);
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function showLightboxSlide(i) {
+  const total = lightboxState.items.length;
+  lightboxState.index = (i + total) % total;
+  const imgEl = document.getElementById('lightboxImage');
+  if(imgEl) imgEl.src = lightboxState.items[lightboxState.index];
+  const counterEl = document.getElementById('lightboxCounter');
+  if(counterEl) counterEl.textContent = `${lightboxState.index + 1} / ${total}`;
+  // Komşu kareleri önceden yükle
+  [lightboxState.index + 1, lightboxState.index - 1].forEach(n => {
+    const src = lightboxState.items[(n + total) % total];
+    if(src) { const im = new Image(); im.src = src; }
+  });
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if(!lb) return;
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+let activeSiteData = null;
+
+function initLightbox() {
+  const lb = document.getElementById('lightbox');
+  const gridEl = document.querySelector('.projects-grid');
+  if(!lb || !gridEl || lb.dataset.bound) return;
+  lb.dataset.bound = '1';
+
+  gridEl.addEventListener('click', e => {
+    const card = e.target.closest('.project');
+    if(!card || !activeSiteData) return;
+    const idx = parseInt(card.dataset.projectIndex, 10);
+    const proj = activeSiteData.projects[idx];
+    if(proj) openLightbox(proj);
+  });
+
+  // Belge kartları → lightbox (tek belge)
+  const certsGrid = document.querySelector('.certs-grid');
+  if(certsGrid) {
+    const openCert = card => {
+      const idx = parseInt(card.dataset.certIndex, 10);
+      const c = activeSiteData && activeSiteData.certificates && activeSiteData.certificates.list[idx];
+      if(c) openLightbox({ title: `${c.client} — ${c.type}`, image: c.image });
+    };
+    certsGrid.addEventListener('click', e => {
+      const card = e.target.closest('.cert');
+      if(card) openCert(card);
+    });
+    certsGrid.addEventListener('keydown', e => {
+      if(e.key !== 'Enter' && e.key !== ' ') return;
+      const card = e.target.closest('.cert');
+      if(card) { e.preventDefault(); openCert(card); }
+    });
+  }
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightboxPrev').addEventListener('click', () => showLightboxSlide(lightboxState.index - 1));
+  document.getElementById('lightboxNext').addEventListener('click', () => showLightboxSlide(lightboxState.index + 1));
+  lb.addEventListener('click', e => { if(e.target === lb) closeLightbox(); });
+
+  document.addEventListener('keydown', e => {
+    if(!lb.classList.contains('open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') showLightboxSlide(lightboxState.index - 1);
+    if(e.key === 'ArrowRight') showLightboxSlide(lightboxState.index + 1);
+  });
+
+  // Dokunmatik kaydırma
+  let touchX = null;
+  lb.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    if(touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 50) showLightboxSlide(lightboxState.index + (dx < 0 ? 1 : -1));
+    touchX = null;
+  }, { passive: true });
 }
 
 function renderValues(data) {
@@ -417,19 +596,23 @@ function applySiteData() {
     } catch(e) {}
   }
   
+  activeSiteData = data;
   renderHero(data);
   renderAbout(data);
   renderServices(data);
   renderProjects(data);
+  renderCertificates(data);
   renderValues(data);
   renderProcess(data);
   renderContact(data);
+  initLightbox();
 }
 
 // Export functions to global window object
 window.defaultSiteData = defaultSiteData;
 window.applySiteData = applySiteData;
 window.renderProjects = renderProjects;
+window.renderCertificates = renderCertificates;
 
 // Automatically apply data on load (only if not on the admin page)
 if (!window.location.pathname.includes('admin.html')) {

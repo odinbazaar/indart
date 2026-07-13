@@ -22,7 +22,7 @@ document.getElementById('password').addEventListener('keypress', e => {
 
 function doLogin() {
   const password = document.getElementById('password').value;
-  if (password === 'tavuzkusu35') {
+  if (password === 'Özgür3652') {
     sessionStorage.setItem('indart_auth', 'true');
     document.getElementById('loginScreen').style.opacity = '0';
     setTimeout(() => {
@@ -69,8 +69,18 @@ function uploadFile(input, targetInputId, previewImgId) {
 
 function initDashboard() {
   const saved = localStorage.getItem('indart_site_data');
-  activeData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(window.defaultSiteData)); // deep clone
-  
+  let parsed = null;
+  if (saved) {
+    try { parsed = JSON.parse(saved); } catch(e) {}
+  }
+  // Eski sürüm verisi varsa güncel varsayılanla başla (siteData.js'teki version ile eşleşmeli)
+  if (parsed && parsed.version === window.defaultSiteData.version) {
+    activeData = parsed;
+  } else {
+    localStorage.removeItem('indart_site_data');
+    activeData = JSON.parse(JSON.stringify(window.defaultSiteData)); // deep clone
+  }
+
   populateForm();
 }
 
@@ -176,6 +186,16 @@ function populateForm() {
   // 4. Projects Tab
   renderProjectsList();
 
+  // 4.5 İş Bitirme Belgeleri Tab
+  if (!activeData.certificates) {
+    // Eski kayıtta yoksa varsayılandan getir
+    activeData.certificates = JSON.parse(JSON.stringify(window.defaultSiteData.certificates));
+  }
+  document.getElementById('certs_tag').value = activeData.certificates.tag;
+  document.getElementById('certs_title').value = activeData.certificates.title;
+  document.getElementById('certs_lead').value = activeData.certificates.lead;
+  renderCertsList();
+
   // 5. Values Tab
   document.getElementById('values_tag').value = activeData.values.tag;
   document.getElementById('values_title').value = activeData.values.title;
@@ -247,7 +267,7 @@ function renderProjectsList() {
         <img class="proj-thumb" src="${proj.image}" alt="">
         <div class="proj-details">
           <h4>${proj.title}</h4>
-          <p>${proj.cat} · ${proj.meta}</p>
+          <p>${proj.cat} · ${proj.meta} · ${Array.isArray(proj.gallery) && proj.gallery.length ? proj.gallery.length + ' fotoğraf' : 'tek görsel'}</p>
         </div>
       </div>
       <div class="proj-actions">
@@ -256,6 +276,95 @@ function renderProjectsList() {
       </div>
     </div>
   `).join('');
+}
+
+// İş Bitirme Belgeleri CRUD Render helper
+function renderCertsList() {
+  const listEl = document.getElementById('admin_certs_list');
+  if (!listEl) return;
+  const items = (activeData.certificates && activeData.certificates.list) || [];
+  if (!items.length) {
+    listEl.innerHTML = `<p style="font-size:13px; color:var(--grey);">Henüz belge eklenmedi. "Yeni Belge Ekle" ile başlayın.</p>`;
+    return;
+  }
+  listEl.innerHTML = items.map((c, idx) => `
+    <div class="project-list-item">
+      <div class="proj-info">
+        <img class="proj-thumb" src="${c.image}" alt="">
+        <div class="proj-details">
+          <h4>${c.client}</h4>
+          <p>${c.type} · ${c.meta}</p>
+        </div>
+      </div>
+      <div class="proj-actions">
+        <button class="btn-sm btn-outline" onclick="openEditCertModal(${idx})">Düzenle</button>
+        <button class="btn-sm btn-danger" onclick="deleteCert(${idx})">Sil</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddCertModal() {
+  document.getElementById('certModalTitle').textContent = "Yeni Belge Ekle";
+  document.getElementById('modal_cert_index').value = "-1";
+  document.getElementById('modal_cert_client').value = "";
+  document.getElementById('modal_cert_type').value = "Kesin Kabul Tutanağı";
+  document.getElementById('modal_cert_scope').value = "";
+  document.getElementById('modal_cert_meta').value = "";
+  document.getElementById('modal_cert_image').value = "";
+  document.getElementById('modal_cert_preview').src = "";
+  document.getElementById('certModal').style.display = 'flex';
+}
+
+function openEditCertModal(idx) {
+  const c = activeData.certificates.list[idx];
+  document.getElementById('certModalTitle').textContent = "Belge Düzenle";
+  document.getElementById('modal_cert_index').value = idx;
+  document.getElementById('modal_cert_client').value = c.client;
+  document.getElementById('modal_cert_type').value = c.type;
+  document.getElementById('modal_cert_scope').value = c.scope;
+  document.getElementById('modal_cert_meta').value = c.meta;
+  document.getElementById('modal_cert_image').value = c.image;
+  document.getElementById('modal_cert_preview').src = c.image;
+  document.getElementById('certModal').style.display = 'flex';
+}
+
+function closeCertModal() {
+  document.getElementById('certModal').style.display = 'none';
+}
+
+function saveCertFromModal() {
+  const idx = parseInt(document.getElementById('modal_cert_index').value);
+  const client = document.getElementById('modal_cert_client').value;
+  const type = document.getElementById('modal_cert_type').value;
+  const scope = document.getElementById('modal_cert_scope').value;
+  const meta = document.getElementById('modal_cert_meta').value;
+  const image = document.getElementById('modal_cert_image').value;
+
+  if (!client || !image) {
+    alert('Lütfen İşveren ve Belge Görseli alanlarını doldurunuz.');
+    return;
+  }
+
+  const certData = { client, type, scope, meta, image };
+
+  if (idx === -1) {
+    activeData.certificates.list.push(certData);
+  } else {
+    activeData.certificates.list[idx] = certData;
+  }
+
+  closeCertModal();
+  renderCertsList();
+  showToast('Belge güncellendi! Değişiklikleri yayına almak için Kaydet butonuna basınız.');
+}
+
+function deleteCert(idx) {
+  if (confirm('Bu belgeyi silmek istediğinizden emin misiniz?')) {
+    activeData.certificates.list.splice(idx, 1);
+    renderCertsList();
+    showToast('Belge silindi! Değişiklikleri yayına almak için Kaydet butonuna basınız.');
+  }
 }
 
 // Add/Delete Video helper
@@ -285,8 +394,9 @@ function openAddProjectModal() {
   document.getElementById('modal_project_cat').value = "Office";
   document.getElementById('modal_project_meta').value = "";
   document.getElementById('modal_project_image').value = "";
+  document.getElementById('modal_project_gallery').value = "";
   document.getElementById('modal_proj_preview').src = "";
-  
+
   document.getElementById('projectModal').style.display = 'flex';
 }
 
@@ -298,8 +408,9 @@ function openEditProjectModal(idx) {
   document.getElementById('modal_project_cat').value = proj.cat;
   document.getElementById('modal_project_meta').value = proj.meta;
   document.getElementById('modal_project_image').value = proj.image;
+  document.getElementById('modal_project_gallery').value = Array.isArray(proj.gallery) ? proj.gallery.join('\n') : "";
   document.getElementById('modal_proj_preview').src = proj.image;
-  
+
   document.getElementById('projectModal').style.display = 'flex';
 }
 
@@ -313,13 +424,16 @@ function saveProjectFromModal() {
   const cat = document.getElementById('modal_project_cat').value;
   const meta = document.getElementById('modal_project_meta').value;
   const image = document.getElementById('modal_project_image').value;
-  
+  const gallery = document.getElementById('modal_project_gallery').value
+    .split('\n').map(s => s.trim()).filter(s => s !== '');
+
   if(!title || !image) {
-    alert('Lütfen Proje Adı ve Görsel alanlarını doldurunuz.');
+    alert('Lütfen Proje Adı ve Kapak Görseli alanlarını doldurunuz.');
     return;
   }
 
   const projData = { title, cat, meta, image };
+  if(gallery.length) projData.gallery = gallery;
 
   if(idx === -1) {
     // Add
@@ -380,6 +494,13 @@ function saveData() {
   }));
 
   // 4. Projects are already saved during modal submission
+
+  // 4.5 İş Bitirme Belgeleri (genel bilgiler; liste modal ile kaydedilir)
+  if (activeData.certificates) {
+    activeData.certificates.tag = document.getElementById('certs_tag').value;
+    activeData.certificates.title = document.getElementById('certs_title').value;
+    activeData.certificates.lead = document.getElementById('certs_lead').value;
+  }
 
   // 5. Values
   activeData.values.tag = document.getElementById('values_tag').value;
@@ -475,6 +596,11 @@ window.openAddProjectModal = openAddProjectModal;
 window.openEditProjectModal = openEditProjectModal;
 window.closeProjectModal = closeProjectModal;
 window.saveProjectFromModal = saveProjectFromModal;
+window.openAddCertModal = openAddCertModal;
+window.openEditCertModal = openEditCertModal;
+window.closeCertModal = closeCertModal;
+window.saveCertFromModal = saveCertFromModal;
+window.deleteCert = deleteCert;
 window.saveData = saveData;
 window.addVideo = addVideo;
 window.doLogin = doLogin;
