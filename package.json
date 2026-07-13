@@ -11,10 +11,10 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
+  "dependencies": {
     "vite": "^8.0.10"
   },
-  "dependencies": {
+  "devDependencies": {
     "sharp": "^0.35.3"
   }
 }
