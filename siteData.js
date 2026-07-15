@@ -620,6 +620,15 @@ async function applySiteData() {
   renderProcess(data);
   renderContact(data);
   initLightbox();
+
+  // Icerik asenkron basildigi icin, index.html'deki scroll animasyonu observer'i
+  // bu elemanlari kacirir. Render bitince yeniden izlemeye al.
+  if (typeof window.__observeReveals === 'function') {
+    window.__observeReveals();
+  } else {
+    // Observer hic yoksa (ornegin baska bir sayfa) icerik en azindan gorunur olsun
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }
 }
 
 // Export functions to global window object

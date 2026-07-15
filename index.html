@@ -1227,7 +1227,12 @@
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} });
   },{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  // siteData.js icerigi asenkron bastigi icin, render sonrasi yeni .reveal
+  // elemanlari da izlemeye alinmali — yoksa kalici olarak seffaf kalirlar.
+  window.__observeReveals = () => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el=>io.observe(el));
+  };
+  window.__observeReveals();
 
   // Filter buttons
   document.querySelectorAll('.filter').forEach(b=>{
