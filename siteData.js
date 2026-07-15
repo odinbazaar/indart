@@ -582,20 +582,34 @@ function renderContact(data) {
   }
 }
 
-function applySiteData() {
-  const saved = localStorage.getItem('indart_site_data');
-  let data = defaultSiteData;
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      if (parsed.version === defaultSiteData.version) {
-        data = parsed;
-      } else {
-        localStorage.removeItem('indart_site_data');
-      }
-    } catch(e) {}
+// Sunucudaki kayit ile koddaki varsayilanlari birlestirir.
+// Kayitta olmayan yeni bolumler (kod guncellendiginde) varsayilandan gelir;
+// boylece surum atlayinca kullanicinin duzenlemeleri silinmez.
+function mergeWithDefaults(saved) {
+  if (!saved || typeof saved !== 'object') return defaultSiteData;
+  const merged = JSON.parse(JSON.stringify(defaultSiteData));
+  Object.keys(merged).forEach(key => {
+    if (key === 'version') return;
+    if (saved[key] !== undefined && saved[key] !== null) merged[key] = saved[key];
+  });
+  return merged;
+}
+
+async function fetchServerData() {
+  try {
+    const res = await fetch('api/load.php', { cache: 'no-store' });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return (json && json.ok && json.data) ? json.data : null;
+  } catch (e) {
+    return null; // PHP yoksa (yerel gelistirme) sessizce varsayilanlara don
   }
-  
+}
+
+async function applySiteData() {
+  const serverData = await fetchServerData();
+  const data = serverData ? mergeWithDefaults(serverData) : defaultSiteData;
+
   activeSiteData = data;
   renderHero(data);
   renderAbout(data);
@@ -613,6 +627,8 @@ window.defaultSiteData = defaultSiteData;
 window.applySiteData = applySiteData;
 window.renderProjects = renderProjects;
 window.renderCertificates = renderCertificates;
+window.mergeWithDefaults = mergeWithDefaults;
+window.fetchServerData = fetchServerData;
 
 // Automatically apply data on load (only if not on the admin page)
 if (!window.location.pathname.includes('admin.html')) {

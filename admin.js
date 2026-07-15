@@ -1,7 +1,13 @@
 var activeData = {};
 
+// Oturum sifresi (kaydetme isteklerinde sunucuya gonderilir).
+// Sifre artik istemci kodunda TUTULMAZ; dogrulama api/auth.php tarafindan yapilir.
+function getSessionPassword() {
+  return sessionStorage.getItem('indart_pw') || '';
+}
+
 // Auth state check
-if (sessionStorage.getItem('indart_auth') === 'true') {
+if (sessionStorage.getItem('indart_auth') === 'true' && getSessionPassword()) {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminDashboard').style.display = 'flex';
   initDashboard();
@@ -20,24 +26,55 @@ document.getElementById('password').addEventListener('keypress', e => {
   if (e.key === 'Enter') doLogin();
 });
 
-function doLogin() {
+async function doLogin() {
   const password = document.getElementById('password').value;
-  if (password === 'Özgür3652') {
-    sessionStorage.setItem('indart_auth', 'true');
-    document.getElementById('loginScreen').style.opacity = '0';
-    setTimeout(() => {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminDashboard').style.display = 'flex';
-      initDashboard();
-    }, 300);
-  } else {
-    document.getElementById('errorMsg').style.display = 'block';
+  const errEl = document.getElementById('errorMsg');
+  const btn = document.getElementById('loginBtn');
+
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Kontrol ediliyor...';
+
+  let result;
+  try {
+    const res = await fetch('api/auth.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    result = await res.json().catch(() => null);
+  } catch (e) {
+    result = null;
   }
+
+  btn.disabled = false;
+  btn.textContent = 'Giriş Yap';
+
+  if (!result) {
+    errEl.textContent = 'Sunucuya bağlanılamadı. Yönetim paneli yalnızca yayındaki sitede çalışır (PHP gerekir).';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!result.ok) {
+    errEl.textContent = 'Hatalı şifre girdiniz. Lütfen tekrar deneyin.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  sessionStorage.setItem('indart_auth', 'true');
+  sessionStorage.setItem('indart_pw', password);
+  document.getElementById('loginScreen').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'flex';
+    initDashboard();
+  }, 300);
 }
 
 // Logout handler
 document.getElementById('logoutBtn').addEventListener('click', () => {
   sessionStorage.removeItem('indart_auth');
+  sessionStorage.removeItem('indart_pw');
   location.reload();
 });
 
@@ -67,19 +104,18 @@ function uploadFile(input, targetInputId, previewImgId) {
 
 // Load and Render active data in form
 
-function initDashboard() {
-  const saved = localStorage.getItem('indart_site_data');
-  let parsed = null;
-  if (saved) {
-    try { parsed = JSON.parse(saved); } catch(e) {}
+async function initDashboard() {
+  // Kaynak artik sunucudaki kayit; yoksa koddaki varsayilanlar.
+  let serverData = null;
+  try {
+    serverData = await window.fetchServerData();
+  } catch (e) {
+    serverData = null;
   }
-  // Eski sürüm verisi varsa güncel varsayılanla başla (siteData.js'teki version ile eşleşmeli)
-  if (parsed && parsed.version === window.defaultSiteData.version) {
-    activeData = parsed;
-  } else {
-    localStorage.removeItem('indart_site_data');
-    activeData = JSON.parse(JSON.stringify(window.defaultSiteData)); // deep clone
-  }
+
+  activeData = serverData
+    ? window.mergeWithDefaults(serverData)
+    : JSON.parse(JSON.stringify(window.defaultSiteData)); // deep clone
 
   populateForm();
 }
@@ -448,8 +484,8 @@ function saveProjectFromModal() {
   showToast('Proje güncellendi! Değişiklikleri yayına almak için Kaydet butonuna basınız.');
 }
 
-// Save dashboard data back to activeData and localStorage
-function saveData() {
+// Formdaki degerleri activeData'ya alir ve sunucuya kalici olarak kaydeder
+async function saveData() {
   // 1. Hero
   activeData.hero.eyebrow = document.getElementById('hero_eyebrow').value;
   activeData.hero.titleLine1 = document.getElementById('hero_titleLine1').value;
@@ -531,9 +567,42 @@ function saveData() {
   activeData.contact.factoryOffice.text = document.getElementById('contact_factoryOffice_text').value;
   activeData.contact.footerText = document.getElementById('contact_footerText').value;
 
-  // Save to localStorage
-  localStorage.setItem('indart_site_data', JSON.stringify(activeData));
-  showToast('Tüm değişiklikler başarıyla kaydedildi ve yayınlandı!');
+  // Sunucuya kalici olarak yaz
+  await pushToServer();
+}
+
+// Veriyi sunucudaki JSON dosyasina yazar — tum ziyaretcilerde gecerli olur
+async function pushToServer() {
+  const password = getSessionPassword();
+  if (!password) {
+    showToast('Oturum düştü. Lütfen tekrar giriş yapın.');
+    return false;
+  }
+
+  showToast('Kaydediliyor...');
+  try {
+    const res = await fetch('api/save.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, data: activeData })
+    });
+    const result = await res.json().catch(() => null);
+
+    if (!result) {
+      showToast('Sunucuya bağlanılamadı — kayıt YAPILMADI. (Yerelde PHP çalışmaz; yayındaki sitede deneyin.)');
+      return false;
+    }
+    if (!result.ok) {
+      showToast('Kayıt başarısız: ' + (result.error || 'bilinmeyen hata'));
+      return false;
+    }
+
+    showToast('Kaydedildi! Değişiklikler artık sitede herkes için yayında.');
+    return true;
+  } catch (e) {
+    showToast('Sunucuya bağlanılamadı — kayıt YAPILMADI.');
+    return false;
+  }
 }
 
 // Toast notifier
@@ -567,16 +636,15 @@ document.getElementById('jsonFileInput').addEventListener('change', function(e) 
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = async function(e) {
     try {
       const importedData = JSON.parse(e.target.result);
-      
+
       // Simple validation check
       if(importedData.hero && importedData.about && importedData.services && importedData.projects) {
-        activeData = importedData;
-        localStorage.setItem('indart_site_data', JSON.stringify(activeData));
+        activeData = window.mergeWithDefaults(importedData);
         populateForm();
-        showToast('JSON Ayarları başarıyla içe aktarıldı ve kaydedildi!');
+        await pushToServer();
       } else {
         alert('Hatalı veri yapısı! Lütfen geçerli bir indart_site_data JSON dosyası yükleyin.');
       }
